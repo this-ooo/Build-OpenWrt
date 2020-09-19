@@ -147,7 +147,7 @@ jobs:
 
     - name: Image - build docker image
       run: |
-        cp ${{ env.FIRMWARE }}/*-rootfs.tar.gz nanopi-m1
+        sudo cp ${{ env.FIRMWARE }}/*-rootfs.tar.gz DIY/nanopi-m1
         sudo cp -r DIY/nanopi-m1 /mnt
         cd /mnt/nanopi-m1
         sudo bash build.sh

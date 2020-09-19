@@ -138,7 +138,7 @@ jobs:
 
     - name: Image - build docker image
       run: |
-        cp ${{ env.FIRMWARE }}/*-rootfs.tar.gz aarch64
+        sudo cp ${{ env.FIRMWARE }}/*-rootfs.tar.gz DIY/aarch64
         sudo cp -r DIY/aarch64 /mnt
         cd /mnt/aarch64
         sudo bash build.sh

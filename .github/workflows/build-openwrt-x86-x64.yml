@@ -138,7 +138,7 @@ jobs:
 
     - name: Image - build docker image
       run: |
-        cp ${FIRMWARE}/*-rootfs.tar.gz x86-x64
+        sudo cp ${FIRMWARE}/*-rootfs.tar.gz DIY/x86-x64
         sudo cp -r DIY/x86-x64 /mnt
         cd /mnt/x86-x64
         sudo bash build.sh

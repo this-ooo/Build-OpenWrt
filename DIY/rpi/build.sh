@@ -7,7 +7,7 @@ fi
 
 TMPDIR=openwrt_rootfs
 OUTDIR=/opt/imgs
-IMG_NAME=openwrt-bcm27xx-bcm2708-rpi
+IMG_NAME=openwrt-bcm27xx-bcm2709-rpi-2
 
 [ -d "$TMPDIR" ] && rm -rf "$TMPDIR"
 

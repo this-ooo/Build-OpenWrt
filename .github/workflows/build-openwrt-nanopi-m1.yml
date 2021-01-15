@@ -79,7 +79,7 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-        sed -i 's/192.168.123.3/192.168.123.18/g' package/base-files/files/bin/config_generate
+        sed -i 's/192.168.123.3/192.168.7.15/g' package/base-files/files/bin/config_generate
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -95,7 +95,7 @@ jobs:
         cp DIY/nanopi-m1/cortexa7.mk openwrt/target/linux/sunxi/image/cortexa7.mk
         cp DIY/nanopi-m1/999-nanopi-m1-emac.pacth openwrt/target/linux/sunxi/patches-4.19/999-nanopi-m1-emac.pacth
         cp DIY/nanopi-m1/999-nanopi-m1-emac.pacth openwrt/target/linux/sunxi/patches-5.4/999-nanopi-m1-emac.pacth
-
+        
 
     - name: Download package
       id: package
@@ -145,6 +145,7 @@ jobs:
         path: ${{ env.FIRMWARE }}
 
 
+
     - name: Image - build docker image
       run: |
         sudo cp ${{ env.FIRMWARE }}/*-rootfs.tar.gz DIY/nanopi-m1
@@ -158,6 +159,7 @@ jobs:
       with:
         name: Docker-OpenWrt-Nanopi-M1
         path: /opt/imgs
+
 
 
     - name: Upload firmware to cowtransfer
@@ -199,7 +201,7 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: ActionsRML/delete-workflow-runs@main
+      uses: GitRML/delete-workflow-runs@main
       with:
         retain_days: 1
         keep_minimum_runs: 3
@@ -212,4 +214,3 @@ jobs:
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

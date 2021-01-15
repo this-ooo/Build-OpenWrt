@@ -37,7 +37,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@main
 
     - name: Initialization environment
       env:
@@ -136,6 +136,7 @@ jobs:
         path: ${{ env.FIRMWARE }}
 
 
+
     - name: Image - build docker image
       run: |
         sudo cp ${{ env.FIRMWARE }}/*-rootfs.tar.gz DIY/aarch64
@@ -190,7 +191,7 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: ActionsRML/delete-workflow-runs@main
+      uses: GitRML/delete-workflow-runs@main
       with:
         retain_days: 1
         keep_minimum_runs: 3
@@ -203,4 +204,3 @@ jobs:
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

@@ -157,7 +157,13 @@ endef
 define U-Boot/nanopi_m1
   BUILD_SUBTARGET:=cortexa7
   NAME:=NanoPi M1 (H3)
-  BUILD_DEVICES:=sun8i-h3-nanopi-m1
+  BUILD_DEVICES:=friendlyarm_nanopi-m1
+endef
+
+define U-Boot/zeropi
+  BUILD_SUBTARGET:=cortexa7
+  NAME:=ZeroPi (H3)
+  BUILD_DEVICES:=friendlyarm_zeropi
 endef
 
 define U-Boot/nanopi_neo_air
@@ -170,6 +176,12 @@ define U-Boot/nanopi_neo
   BUILD_SUBTARGET:=cortexa7
   NAME:=U-Boot for NanoPi NEO (H3)
   BUILD_DEVICES:=friendlyarm_nanopi-neo
+endef
+
+define U-Boot/nanopi_r1
+  BUILD_SUBTARGET:=cortexa7
+  NAME:=U-Boot for NanoPi R1 (H3)
+  BUILD_DEVICES:=friendlyarm_nanopi-r1
 endef
 
 define U-Boot/orangepi_r1
@@ -278,7 +290,7 @@ endef
 define U-Boot/Bananapi_M2_Ultra
   BUILD_SUBTARGET:=cortexa7
   NAME:=Bananapi M2 Ultra
-  BUILD_DEVICES:=lemaker_bananapi-m2-ultra
+  BUILD_DEVICES:=sinovoip_bananapi-m2-ultra
 endef
 
 UBOOT_TARGETS := \
@@ -305,10 +317,12 @@ UBOOT_TARGETS := \
 	Linksprite_pcDuino3 \
 	Lamobo_R1 \
 	nanopi_m1_plus \
+	zeropi \
 	nanopi_neo \
 	nanopi_neo_air \
 	nanopi_neo_plus2 \
 	nanopi_neo2 \
+	nanopi_r1 \
 	orangepi_zero \
 	orangepi_r1 \
 	orangepi_one \

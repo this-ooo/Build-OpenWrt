@@ -32,9 +32,10 @@ endef
 TARGET_DEVICES += friendlyarm_nanopi-m1-plus
 
 define Device/friendlyarm_nanopi-m1
-  DEVICE_TITLE:=FriendlyArm NanoPi M1
+  DEVICE_VENDOR := FriendlyARM
+  DEVICE_MODEL := NanoPi M1
   DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-leds-gpio kmod-ledtrig-heartbeat \
-	kmod-brcmfmac brcmfmac-firmware-43430-sdio wpad-basic
+	kmod-brcmfmac brcmfmac-firmware-43430-sdio wpad-basic-wolfssl
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += friendlyarm_nanopi-m1

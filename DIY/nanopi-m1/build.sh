@@ -7,7 +7,7 @@ fi
 
 TMPDIR=openwrt_rootfs
 OUTDIR=/opt/imgs
-IMG_NAME=openwrt-sunxi-cortexa7-sun8i-h3-nanopi-m1
+IMG_NAME=openwrt-sunxi-cortexa7-friendlyarm_nanopi-m1
 
 [ -d "$TMPDIR" ] && rm -rf "$TMPDIR"
 

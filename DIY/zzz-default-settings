@@ -26,6 +26,9 @@ uci commit dhcp
 uci set upnpd.@upnpd[0].enabled=1
 uci commit upnpd
 
+uci set autoreboot.@login[0].enable=1
+uci commit autoreboot
+
 uci set socat.@global[0].enable=1
 uci commit socat
 

@@ -19,6 +19,8 @@ uci commit system
 
 uci set dhcp.lan.ra_default=1
 #uci set dhcp.lan.ra_management=1
+uci add_list dhcp.@dnsmasq[0].addnhosts='/etc/hosts2'
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'
 uci commit dhcp
 
 uci set upnpd.@upnpd[0].enabled=1

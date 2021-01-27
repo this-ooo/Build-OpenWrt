@@ -12,4 +12,4 @@
 #sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
 sed -i 's/192.168.1.1/192.168.123.3/g' package/base-files/files/bin/config_generate
 #sed -i -e '21s/reboot/autoreboot/g' -e '26s/reboot/autoreboot/g' package/lean/luci-app-autoreboot/root/etc/init.d/autoreboot
-#mv $GITHUB_WORKSPACE/DIY/wifi package/kernel/mac80211/files/lib/wifi/mac80211.sh
+sed -i 's/encryption=none/encryption=sae-mixed\n\t\t\tset wireless.default_radio${devidx}.key=123456789/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh

@@ -1,2 +1,2 @@
 #!/bin/sh -e
-token=*** ./dynv6.sh ***.dynv6.net
+token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn ./dynv6.sh ***.dynv6.net

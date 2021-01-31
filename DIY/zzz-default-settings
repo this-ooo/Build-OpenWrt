@@ -14,6 +14,10 @@ uci add luci command
 uci set luci.@command[0].name='ipv6brctl'
 uci set luci.@command[0].command='/etc/ipv6brctl.sh'
 uci commit luci
+uci add luci command
+uci set luci.@command[1].name='dynv6'
+uci set luci.@command[1].command='/etc/dynv6cron.sh'
+uci commit luci
 uci set network.wan6.sourcefilter=0
 uci set network.globals.ula_prefix=dc00:101:101::/48
 uci commit network
@@ -67,7 +71,7 @@ echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MA
 chmod a+x /etc/dynv6.sh
 chmod a+x /etc/dynv6cron.sh
 chmod a+x /etc/ipv6brctl.sh
-echo "0 * * * * /etc/dynv6cron.sh" >> /etc/crontabs/root
+echo "*/10 * * * * /etc/dynv6cron.sh" >> /etc/crontabs/root
 
 sed -i '/option disabled/d' /etc/config/wireless
 sed -i '/set wireless.radio${devidx}.disabled/d' /lib/wifi/mac80211.sh

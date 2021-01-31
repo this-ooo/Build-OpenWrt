@@ -54,7 +54,6 @@ chmod a+x /etc/dynv6.sh
 chmod a+x /etc/dynv6cron.sh
 chmod a+x /etc/ipv6brctl.sh
 echo "*/10 * * * * /etc/dynv6cron.sh" >> /etc/crontabs/root
-echo "@reboot sleep 10 && /etc/dynv6cron.sh" >> /etc/crontabs/root
 
 rm -f /usr/lib/lua/luci/view/admin_status/index/mwan.htm
 rm -f /usr/lib/lua/luci/view/admin_status/index/upnp.htm

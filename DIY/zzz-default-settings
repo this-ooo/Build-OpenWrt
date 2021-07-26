@@ -33,10 +33,6 @@ uci set upnpd.@upnpd[0].enabled=1
 uci commit upnpd
 uci set autoreboot.@login[0].enable=1
 uci commit autoreboot
-uci set shadowsocksr.@global[0].switch_time='66'
-uci add_list shadowsocksr.@server_subscribe[0].subscribe_url='https://raw.githubusercontent.com/ssrsub/ssr/master/ssrsub'
-uci set shadowsocksr.@socks5_proxy[0].server='same'
-uci commit shadowsocksr
 uci set socat.@global[0].enable=1
 uci set socat.55555555555555555555555555555555='config'
 uci set socat.55555555555555555555555555555555.firewall_accept='1'

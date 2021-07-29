@@ -2,7 +2,7 @@
 # Build OpenWrt miwifi nano
 #=================================================
 
-name: Build OpenWrt
+name: Build OpenWrt miwifi nano
 
 on:
   repository_dispatch:

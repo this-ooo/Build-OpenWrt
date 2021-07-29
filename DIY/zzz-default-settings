@@ -50,8 +50,7 @@ uci commit socat
 echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MASQUERADE" >> /etc/firewall.user
 chmod a+x /etc/dynv6.sh
 chmod a+x /etc/ipv6brctl.sh
-chmod a+x /etc/dynv6cron.sh
-echo "*/15 * * * * /etc/dynv6cron.sh" >> /etc/crontabs/root
+echo "*/15 * * * * token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.dynv6.net" >> /etc/crontabs/root
 
 
 rm -f /usr/lib/lua/luci/view/admin_status/index/mwan.htm

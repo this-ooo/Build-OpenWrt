@@ -16,17 +16,13 @@ uci add luci command
 uci set luci.@command[0].name='ipv6brctl'
 uci set luci.@command[0].command='/etc/ipv6brctl.sh'
 uci commit luci
-uci add luci command
-uci set luci.@command[1].name='dynv6'
-uci set luci.@command[1].command='/etc/dynv6cron.sh'
-uci commit luci
 uci set network.wan6.sourcefilter=0
 uci set network.globals.ula_prefix=dc00:101:101::/48
 uci commit network
 uci set system.ntp.enable_server='1'
 uci commit system
 uci set dhcp.lan.ra_default=1
-#uci add_list dhcp.@dnsmasq[0].addnhosts='/etc/hosts2'
+uci add_list dhcp.@dnsmasq[0].addnhosts='/etc/hosts2'
 uci set dhcp.@dnsmasq[0].filter_aaaa='0'
 uci commit dhcp
 uci set upnpd.@upnpd[0].enabled=1
@@ -50,7 +46,7 @@ uci commit socat
 echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MASQUERADE" >> /etc/firewall.user
 chmod a+x /etc/dynv6.sh
 chmod a+x /etc/ipv6brctl.sh
-echo "*/15 * * * * token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.dynv6.net" >> /etc/crontabs/root
+echo "*/15 * * * * token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn ./etc/dynv6.sh fanyue.dynv6.net" >> /etc/crontabs/root
 
 
 rm -f /usr/lib/lua/luci/view/admin_status/index/mwan.htm

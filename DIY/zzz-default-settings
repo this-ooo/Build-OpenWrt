@@ -17,8 +17,8 @@ uci set luci.@command[0].name='ipv6brctl'
 uci set luci.@command[0].command='/etc/ipv6brctl.sh'
 uci commit luci
 uci add luci command
-uci set luci.@command[0].name='dynv6cron'
-uci set luci.@command[0].command='/etc/dynv6cron.sh'
+uci set luci.@command[1].name='dynv6cron'
+uci set luci.@command[1].command='/etc/dynv6cron.sh'
 uci commit luci
 uci set network.wan6.sourcefilter=0
 uci set network.globals.ula_prefix=dc00:101:101::/48

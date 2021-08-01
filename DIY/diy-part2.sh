@@ -9,3 +9,5 @@ cp -rf $GITHUB_WORKSPACE/DIY/hosts2 package/base-files/files/etc/hosts2
 cp -rf $GITHUB_WORKSPACE/DIY/dynv6.sh package/base-files/files/etc/dynv6.sh
 cp -rf $GITHUB_WORKSPACE/DIY/dynv6cron.sh package/base-files/files/etc/dynv6cron.sh
 cp -rf $GITHUB_WORKSPACE/DIY/ipv6brctl.sh package/base-files/files/etc/ipv6brctl.sh
+git clone https://github.com/pymumu/luci-app-smartdns.git feeds/luci/applications/luci-app-smartdns
+./scripts/feeds install -a

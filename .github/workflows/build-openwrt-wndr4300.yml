@@ -1,8 +1,8 @@
 #=================================================
-# Build OpenWrt Nanopi M1
+# Build OpenWrt WNDR4300v1
 #=================================================
 
-name: Build OpenWrt Nanopi M1
+name: Build OpenWrt WNDR4300
 
 on:
   repository_dispatch:
@@ -21,7 +21,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: nanopi-m1.config
+  CONFIG_FILE: WNDR4300.config
   DIY_P1_SH: DIY/diy-part1.sh
   DIY_P2_SH: DIY/diy-part2.sh
   UPLOAD_BIN_DIR: false
@@ -79,7 +79,7 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-        sed -i 's/192.168.1.1/192.168.7.15/g' package/base-files/files/bin/config_generate
+        sed -i 's/192.168.1.1/192.168.7.1/g' package/base-files/files/bin/config_generate
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -87,15 +87,6 @@ jobs:
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
-
-    - name: patch
-      run: |
-        cp DIY/nanopi-m1/Makefile openwrt/package/boot/uboot-sunxi/Makefile
-        cp DIY/nanopi-m1/cortexa7.mk openwrt/target/linux/sunxi/image/cortexa7.mk
-        cp DIY/nanopi-m1/999-nanopi-m1-emac.pacth openwrt/target/linux/sunxi/patches-4.19/999-nanopi-m1-emac.pacth
-        cp DIY/nanopi-m1/999-nanopi-m1-emac.pacth openwrt/target/linux/sunxi/patches-5.4/999-nanopi-m1-emac.pacth
-        
 
     - name: Download package
       id: package
@@ -143,24 +134,6 @@ jobs:
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
-
-
-
-    - name: Image - build docker image
-      run: |
-        sudo cp ${{ env.FIRMWARE }}/*-rootfs.tar.gz DIY/nanopi-m1
-        sudo cp -r DIY/nanopi-m1 /mnt
-        cd /mnt/nanopi-m1
-        sudo bash build.sh
-        sudo cp -r /opt/imgs ${{ env.FIRMWARE }}
-
-    - name: Upload - push to artifact file
-      uses: actions/upload-artifact@master
-      with:
-        name: Docker-OpenWrt-Nanopi-M1
-        path: /opt/imgs
-
-
 
     - name: Upload firmware to cowtransfer
       id: cowtransfer

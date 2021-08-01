@@ -9,5 +9,15 @@ cp -rf $GITHUB_WORKSPACE/DIY/hosts2 package/base-files/files/etc/hosts2
 cp -rf $GITHUB_WORKSPACE/DIY/dynv6.sh package/base-files/files/etc/dynv6.sh
 cp -rf $GITHUB_WORKSPACE/DIY/dynv6cron.sh package/base-files/files/etc/dynv6cron.sh
 cp -rf $GITHUB_WORKSPACE/DIY/ipv6brctl.sh package/base-files/files/etc/ipv6brctl.sh
-git clone https://github.com/pymumu/luci-app-smartdns.git feeds/luci/applications/luci-app-smartdns
+
+LUCIBRANCH="lede" #更换此变量
+WORKINGDIR="`pwd`/feeds/luci/applications/luci-app-smartdns"
+mkdir $WORKINGDIR -p
+rm $WORKINGDIR/* -fr
+wget https://github.com/pymumu/luci-app-smartdns/archive/${LUCIBRANCH}.zip -O $WORKINGDIR/${LUCIBRANCH}.zip
+unzip $WORKINGDIR/${LUCIBRANCH}.zip -d $WORKINGDIR
+mv $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}/* $WORKINGDIR/
+rmdir $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}
+rm $WORKINGDIR/${LUCIBRANCH}.zip
+
 ./scripts/feeds install -a

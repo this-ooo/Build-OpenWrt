@@ -8,3 +8,4 @@ cp -rf $GITHUB_WORKSPACE/DIY/hosts2 package/base-files/files/etc/hosts2
 cp -rf $GITHUB_WORKSPACE/DIY/dynv6.sh package/base-files/files/etc/dynv6.sh
 cp -rf $GITHUB_WORKSPACE/DIY/dynv6cron.sh package/base-files/files/etc/dynv6cron.sh
 cp -rf $GITHUB_WORKSPACE/DIY/settings package/base-files/files/etc/uci-defaults/99_settings
+cp -rf $GITHUB_WORKSPACE/DIY/wgethosts2.sh package/base-files/files/etc/wgethosts2.sh

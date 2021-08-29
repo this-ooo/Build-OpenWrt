@@ -1,7 +1,7 @@
 #!/bin/sh -e
 hostname=$1
 device=$2
-file=$HOME/.dynv6.addr6
+file=/root/.dynv6.addr6
 [ -e $file ] && old=`cat $file`
 
 if [ -z "$hostname" -o -z "$token" ]; then

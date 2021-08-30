@@ -1,8 +1,8 @@
 #=================================================
-# Build OpenWrt x86-x64
+# Build OpenWrt LEDE x86-x64
 #=================================================
 
-name: Build OpenWrt x86-x64
+name: Build OpenWrt LEDE x86-x64
 
 on:
   repository_dispatch:

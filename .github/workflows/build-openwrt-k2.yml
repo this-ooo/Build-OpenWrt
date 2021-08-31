@@ -2,7 +2,7 @@
 # Build OpenWrt K2
 #=================================================
 
-name: Build OpenWrt WR1200JS
+name: Build OpenWrt K2
 
 on:
   repository_dispatch:

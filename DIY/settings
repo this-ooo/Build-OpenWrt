@@ -7,14 +7,14 @@ uci add luci command
 uci set luci.@command[1].name='wgethosts2'
 uci set luci.@command[1].command='/etc/wgethosts2.sh'
 uci commit luci
-uci set network.wan6.sourcefilter=0
-uci set network.globals.ula_prefix=dc00:101:101::/48
-uci commit network
-uci set system.ntp.enable_server='1'
+#uci set network.wan6.sourcefilter=0
+#uci set network.globals.ula_prefix=dc00:101:101::/48
+#uci commit network
+#uci set system.ntp.enable_server='1'
 uci commit system
-uci set dhcp.lan.ra_default=1
+#uci set dhcp.lan.ra_default=1
 uci add_list dhcp.@dnsmasq[0].addnhosts='/etc/hosts2'
-uci set dhcp.@dnsmasq[0].filter_aaaa='0'
+#uci set dhcp.@dnsmasq[0].filter_aaaa='0'
 uci commit dhcp
 uci set upnpd.@upnpd[0].enabled=1
 uci commit upnpd
@@ -34,7 +34,7 @@ uci set socat.55555555555555555555555555555555.dest_port='80'
 uci set socat.55555555555555555555555555555555.listen_port='5555'
 uci commit socat
 
-echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MASQUERADE" >> /etc/firewall.user
+#echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MASQUERADE" >> /etc/firewall.user
 echo "104.16.2.80 javdb.com" >> /etc/hosts
 chmod a+x /etc/wgethosts2.sh
 chmod a+x /etc/dynv6.sh

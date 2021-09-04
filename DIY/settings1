@@ -1,0 +1,39 @@
+#!/bin/sh
+uci add luci command
+uci set luci.@command[0].name='dynv6cron'
+uci set luci.@command[0].command='/etc/dynv6cron.sh'
+uci commit luci
+uci set network.wan6.sourcefilter=0
+uci set network.globals.ula_prefix=dc00:101:101::/48
+uci commit network
+uci set system.ntp.enable_server='1'
+uci commit system
+uci set dhcp.lan.ra_default=1
+uci set dhcp.@dnsmasq[0].filter_aaaa='0'
+uci commit dhcp
+uci set upnpd.@upnpd[0].enabled=1
+uci commit upnpd
+uci set autoreboot.@login[0].enable=1
+uci commit autoreboot
+uci set socat.@global[0].enable=1
+uci set socat.55555555555555555555555555555555='config'
+uci set socat.55555555555555555555555555555555.firewall_accept='1'
+uci set socat.55555555555555555555555555555555.enable='1'
+uci set socat.55555555555555555555555555555555.remarks='5555'
+uci set socat.55555555555555555555555555555555.protocol='port_forwards'
+uci set socat.55555555555555555555555555555555.proto='tcp'
+uci set socat.55555555555555555555555555555555.reuseaddr='1'
+uci set socat.55555555555555555555555555555555.dest_proto='tcp4'
+uci set socat.55555555555555555555555555555555.dest_ip='127.0.0.1'
+uci set socat.55555555555555555555555555555555.dest_port='80'
+uci set socat.55555555555555555555555555555555.listen_port='5555'
+uci commit socat
+
+echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MASQUERADE" >> /etc/firewall.user
+chmod a+x /etc/dynv6.sh
+chmod a+x /etc/dynv6cron.sh
+echo "*/30 * * * * /etc/dynv6cron.sh" >> /etc/crontabs/root
+echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
+echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
+
+exit 0

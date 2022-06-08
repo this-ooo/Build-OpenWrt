@@ -18,7 +18,6 @@ exit 0
 " >> /etc/ipv6brctl.sh
 chmod a+x /etc/ipv6brctl.sh
 echo "104.16.2.80 javdb.com" >> /etc/hosts
-echo "# GitHub Start 80:FA:5B:2B:85:8A" >> /etc/hosts2
 echo "#!/bin/sh
 wget --no-check-certificate -O /etc/hosts2 https://raw.hellogithub.com/hosts
 exit 0" >> /etc/wgethosts2.sh

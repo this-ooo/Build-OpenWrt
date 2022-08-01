@@ -3,16 +3,18 @@ uci add luci command
 uci set luci.@command[0].name='dynv6cron'
 uci set luci.@command[0].command='/etc/dynv6cron.sh'
 uci commit luci
+
 uci set network.wan6.sourcefilter=0
-uci set network.globals.ula_prefix=dc00:101:101::/48
 uci commit network
+
 uci set dhcp.lan.ra_default=1
-uci set dhcp.@dnsmasq[0].filter_aaaa='0'
 uci commit dhcp
+
 uci set upnpd.@upnpd[0].enabled=1
 uci commit upnpd
 uci set autoreboot.@login[0].enable=1
 uci commit autoreboot
+
 uci set socat.@global[0].enable=1
 uci set socat.55555555555555555555555555555555='config'
 uci set socat.55555555555555555555555555555555.firewall_accept='1'
@@ -31,10 +33,10 @@ uci commit socat
 uci set luci.@command[1].name='wgethosts2'
 uci set luci.@command[1].command='/etc/wgethosts2.sh'
 uci add luci command
-#uci add_list dhcp.@dnsmasq[0].addnhosts='/etc/hosts2'
-#uci commit dhcp
 
-echo "104.16.2.80 javdb.com" >> /etc/hosts
+uci add_list dhcp.@dnsmasq[0].addnhosts='/etc/hosts2'
+uci commit dhcp
+
 echo "#!/bin/sh
 wget --no-check-certificate -O /etc/hosts2 https://raw.hellogithub.com/hosts
 exit 0" >> /etc/wgethosts2.sh

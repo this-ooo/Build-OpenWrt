@@ -30,9 +30,10 @@ uci set socat.55555555555555555555555555555555.dest_port='80'
 uci set socat.55555555555555555555555555555555.listen_port='5555'
 uci commit socat
 
+uci add luci command
 uci set luci.@command[1].name='wgethosts2'
 uci set luci.@command[1].command='/etc/wgethosts2.sh'
-uci add luci command
+uci commit luci
 
 uci add_list dhcp.@dnsmasq[0].addnhosts='/etc/hosts2'
 uci commit dhcp

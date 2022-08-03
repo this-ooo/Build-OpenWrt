@@ -16,7 +16,7 @@ fi
 if [ -n "$device" ]; then
   device="dev $device"
 fi
-address=$(ip -6 addr list scope global $device | grep -v " dc" | sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1)
+address=$(ip -6 addr list scope global $device | grep -v "fd" | sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1)
 
 if [ -e /usr/bin/curl ]; then
   bin="curl -fsS"

@@ -1,7 +1,7 @@
 #!/bin/sh
 uci add luci command
 uci set luci.@command[0].name='dynv6'
-uci set luci.@command[0].command='token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.v6.navy'
+uci set luci.@command[0].command='/etc/dynv6up.sh'
 uci add luci command
 uci set luci.@command[1].name='wgethosts2'
 uci set luci.@command[1].command='/etc/wgethosts2.sh'
@@ -48,7 +48,8 @@ echo "0 */1 * * * /etc/wgethosts2.sh" >> /etc/crontabs/root
 
 echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MASQUERADE" >> /etc/firewall.user
 chmod a+x /etc/dynv6.sh
-echo "0 */1 * * * token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.v6.navy" >> /etc/crontabs/root
+chmod a+x /etc/dynv6up.sh
+echo "0 */1 * * * /etc/dynv6up.sh" >> /etc/crontabs/root
 echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
 echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
 

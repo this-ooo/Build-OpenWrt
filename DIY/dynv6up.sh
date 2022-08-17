@@ -1,0 +1,1 @@
+token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.v6.navy

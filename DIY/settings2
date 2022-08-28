@@ -1,0 +1,16 @@
+#!/bin/sh
+uci set upnpd.@upnpd[0].enabled=1
+uci commit upnpd
+uci set autoreboot.@login[0].enable=1
+uci commit autoreboot
+
+uci set firewall.@zone[1].input='ACCEPT'
+uci commit firewall
+
+uci delete dropbear.@dropbear[0].Interface
+uci commit dropbear
+
+echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
+echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
+
+exit 0

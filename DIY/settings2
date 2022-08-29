@@ -13,4 +13,15 @@ uci commit dropbear
 echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
 echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
 
+uci set dhcp.wan6='dhcp'
+uci set dhcp.wan6.dhcpv6=relay
+uci set dhcp.wan6.ra=relay
+uci set dhcp.wan6.ndp=relay
+uci set dhcp.wan6.master=1
+uci set dhcp.wan6.interface=wan6
+uci set dhcp.lan.dhcpv6=hybrid
+uci set dhcp.lan.ra=relay
+uci set dhcp.lan.ndp=relay
+uci commit dhcp
+
 exit 0

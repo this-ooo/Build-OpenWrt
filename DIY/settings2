@@ -22,7 +22,7 @@ uci set dhcp.wan6.ra=relay
 uci set dhcp.wan6.ndp=relay
 uci set dhcp.wan6.master=1
 uci set dhcp.wan6.interface=wan6
-uci set dhcp.lan.dhcpv6=hybrid
+uci set dhcp.lan.dhcpv6=relay
 uci set dhcp.lan.ra=relay
 uci set dhcp.lan.ndp=relay
 uci commit dhcp

@@ -1,0 +1,58 @@
+#!/bin/sh
+uci add luci command
+uci set luci.@command[0].name='dynv6'
+uci set luci.@command[0].command='/etc/dynv6up.sh'
+uci commit luci
+
+uci delete dhcp.lan
+uci delete dhcp.wan
+uci commit dhcp
+
+uci rename network.lan=wan
+uci delete network.wan.type
+uci delete network.wan.ip6assign
+uci set network.wan.gateway=192.168.123.1
+uci set network.wan.dns=192.168.123.1
+uci set network.wan6='interface'
+uci set network.wan6.ifname=eth0
+uci set network.wan6.proto=dhcpv6
+uci set network.wan6.sourcefilter=0
+uci commit network
+
+uci set upnpd.@upnpd[0].enabled=1
+uci commit upnpd
+uci set autoreboot.@login[0].enable=1
+uci commit autoreboot
+
+uci set firewall.@zone[1].input='ACCEPT'
+uci commit firewall
+
+uci delete dropbear.@dropbear[0].Interface
+uci commit dropbear
+
+uci set socat.@global[0].enable=1
+uci set socat.55555555555555555555555555555555='config'
+uci set socat.55555555555555555555555555555555.firewall_accept='1'
+uci set socat.55555555555555555555555555555555.enable='1'
+uci set socat.55555555555555555555555555555555.remarks='5555'
+uci set socat.55555555555555555555555555555555.protocol='port_forwards'
+uci set socat.55555555555555555555555555555555.family='6'
+uci set socat.55555555555555555555555555555555.proto='tcp'
+uci set socat.55555555555555555555555555555555.reuseaddr='1'
+uci set socat.55555555555555555555555555555555.dest_proto='tcp4'
+uci set socat.55555555555555555555555555555555.dest_ip='127.0.0.1'
+uci set socat.55555555555555555555555555555555.dest_port='80'
+uci set socat.55555555555555555555555555555555.listen_port='5555'
+uci commit socat
+
+chmod a+x /etc/dynv6.sh
+echo "#!/bin/sh
+token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.v6.navy
+exit 0" >> /etc/dynv6up.sh
+chmod a+x /etc/dynv6up.sh
+echo "0 */1 * * * /etc/dynv6up.sh" >> /etc/crontabs/root
+
+echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
+echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
+
+exit 0

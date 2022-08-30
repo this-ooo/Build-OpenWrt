@@ -1,9 +1,4 @@
 #!/bin/sh
-uci add luci command
-uci set luci.@command[0].name='dynv6'
-uci set luci.@command[0].command='/etc/dynv6up.sh'
-uci commit luci
-
 uci delete dhcp.lan
 uci delete dhcp.wan
 uci commit dhcp
@@ -19,8 +14,6 @@ uci set network.wan6.proto=dhcpv6
 uci set network.wan6.sourcefilter=0
 uci commit network
 
-uci set upnpd.@upnpd[0].enabled=1
-uci commit upnpd
 uci set autoreboot.@login[0].enable=1
 uci commit autoreboot
 

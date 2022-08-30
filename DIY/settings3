@@ -14,9 +14,6 @@ uci set network.wan6.proto=dhcpv6
 uci set network.wan6.sourcefilter=0
 uci commit network
 
-uci set autoreboot.@login[0].enable=1
-uci commit autoreboot
-
 uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
 
@@ -44,8 +41,5 @@ token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.v6.navy
 exit 0" >> /etc/dynv6up.sh
 chmod a+x /etc/dynv6up.sh
 echo "0 */1 * * * /etc/dynv6up.sh" >> /etc/crontabs/root
-
-echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
-echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
 
 exit 0

@@ -1,9 +1,4 @@
 #!/bin/sh
-uci add luci command
-uci set luci.@command[0].name='dynv6'
-uci set luci.@command[0].command='/etc/dynv6up.sh'
-uci commit luci
-
 uci set network.wan6.sourcefilter=0
 uci commit network
 
@@ -41,11 +36,8 @@ echo "#!/bin/sh
 token=uqZfUZmsmtaeZTCkic1PQ_aYJRp1Kn /etc/dynv6.sh fanyue.v6.navy
 exit 0" >> /etc/dynv6up.sh
 chmod a+x /etc/dynv6up.sh
-echo "0 */1 * * * /etc/dynv6up.sh" >> /etc/crontabs/root
+echo "*/15 * * * * /etc/dynv6up.sh" >> /etc/crontabs/root
 
 echo "ip6tables -t nat -A POSTROUTING -o $(uci -q get network.wan6.ifname) -j MASQUERADE" >> /etc/firewall.user
-
-echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
-echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
 
 exit 0

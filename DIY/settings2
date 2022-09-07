@@ -12,12 +12,22 @@ uci commit dropbear
 
 #uci set network.wan6.sourcefilter=0
 #uci commit network
+uci delete dhcp.lan.dhcpv6
+uci delete dhcp.lan.ra
+uci commit dhcp
 
 echo "#!/bin/sh
-ebtables -t broute -A BROUTING -p ! ipv6 -j DROP -i $(uci -q get network.wan6.ifname)
+ebtables -A FORWARD -o $(uci -q get network.wan6.ifname) -p ! ipv6 -j DROP
+ebtables -t broute -A BROUTING -i $(uci -q get network.wan6.ifname) -p ! ipv6 -j DROP
 brctl addif br-lan $(uci -q get network.wan6.ifname)
 #/etc/init.d/odhcpd stop
 #/etc/init.d/odhcpd disable
+echo 0 > /proc/sys/net/ipv6/conf/$(uci -q get network.lan.ifname)/disable_ipv6
+echo 2 > /proc/sys/net/ipv6/conf/$(uci -q get network.lan.ifname)/accept_ra
+ip6tables -F
+ip6tables -X
+ip6tables -P INPUT ACCEPT
+ip6tables -P OUTPUT ACCEPT
 exit 0" >> /etc/ipv6brctl.sh
 chmod a+x /etc/ipv6brctl.sh
 

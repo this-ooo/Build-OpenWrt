@@ -10,21 +10,18 @@ uci commit firewall
 uci delete dropbear.@dropbear[0].Interface
 uci commit dropbear
 
-echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
-echo "allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
+#uci set network.wan6.sourcefilter=0
+#uci commit network
 
-uci set network.wan6.sourcefilter=0
-uci commit network
+echo "#!/bin/sh
+ebtables -t broute -A BROUTING -p ! ipv6 -j DROP -i $(uci -q get network.wan6.ifname)
+brctl addif br-lan $(uci -q get network.wan6.ifname)
+#/etc/init.d/odhcpd stop
+#/etc/init.d/odhcpd disable
+exit 0" >> /etc/ipv6brctl.sh
+chmod a+x /etc/ipv6brctl.sh
 
-uci set dhcp.wan6='dhcp'
-uci set dhcp.wan6.dhcpv6=relay
-uci set dhcp.wan6.ra=relay
-uci set dhcp.wan6.ndp=relay
-uci set dhcp.wan6.master=1
-uci set dhcp.wan6.interface=wan6
-uci set dhcp.lan.dhcpv6=relay
-uci set dhcp.lan.ra=relay
-uci set dhcp.lan.ndp=relay
-uci commit dhcp
+echo "listener 1883
+allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
 
 exit 0

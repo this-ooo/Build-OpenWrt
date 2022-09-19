@@ -1,8 +1,14 @@
 #!/bin/sh
+
+uci set luci.main.lang=zh_cn
+uci commit luci
+
+uci set system.@system[0].timezone=CST-8
+uci set system.@system[0].zonename=Asia/Shanghai
+uci commit system
+
 uci set upnpd.@upnpd[0].enabled=1
 uci commit upnpd
-uci set autoreboot.@login[0].enable=1
-uci commit autoreboot
 
 uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
@@ -12,26 +18,11 @@ uci commit dropbear
 
 #uci set network.wan6.sourcefilter=0
 #uci commit network
-uci delete dhcp.lan.dhcpv6
-uci delete dhcp.lan.ra
-uci commit dhcp
+#uci delete dhcp.lan.dhcpv6
+#uci delete dhcp.lan.ra
+#uci commit dhcp
 
-echo "#!/bin/sh
-#ebtables -A FORWARD -o $(uci -q get network.wan6.ifname) -p ! ipv6 -j DROP
-ebtables -t broute -A BROUTING -i $(uci -q get network.wan6.ifname) -p ! ipv6 -j DROP
-brctl addif br-lan $(uci -q get network.wan6.ifname)
-/etc/init.d/odhcpd stop
-/etc/init.d/odhcpd disable
-echo 0 > /proc/sys/net/ipv6/conf/$(uci -q get network.lan.ifname)/disable_ipv6
-echo 2 > /proc/sys/net/ipv6/conf/$(uci -q get network.lan.ifname)/accept_ra
-ip6tables -F
-ip6tables -X
-ip6tables -P INPUT ACCEPT
-ip6tables -P OUTPUT ACCEPT
-exit 0" >> /etc/ipv6brctl.sh
-chmod a+x /etc/ipv6brctl.sh
-
-echo "listener 1883
-allow_anonymous true" >> /etc/mosquitto/mosquitto.conf
+sed -i '/option disabled/d' /etc/config/wireless
+sed -i '/set wireless.radio${devidx}.disabled/d' /lib/wifi/mac80211.sh
 
 exit 0

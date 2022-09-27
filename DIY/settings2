@@ -4,8 +4,7 @@ uci set system.@system[0].timezone=CST-8
 uci set system.@system[0].zonename=Asia/Shanghai
 uci commit system
 
-#uci set firewall.@zone[1].input='ACCEPT'
-uci delete firewall.@defaults[0].synflood_protect
+uci set firewall.@defaults[0].forward='ACCEPT'
 uci commit firewall
 
 uci delete dropbear.@dropbear[0].Interface

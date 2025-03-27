@@ -1,5 +1,17 @@
 FROM scratch
-ADD openwrt-armvirt-64-default-rootfs-patched.tar /
-EXPOSE 22 80 443
-# using exec format so that /sbin/init is proc 1 (see procd docs)
-ENTRYPOINT ["/sbin/init"]
+ADD openwrt*-rootfs-patched.tar /
+ENV WANIP='192.168.5.8'
+ENV WANGATEWAY='192.168.5.1'
+ENV WANNETMASK='255.255.255.0'
+ENV WANDNS='192.168.5.1'
+ENV WANETH='eth0'
+ENV WAN6ETH='eth0'
+ENV LANETH='eth0.8'
+ENV LANIP='192.168.8.1'
+ENV LANGATEWAY='192.168.5.1'
+ENV LANNETMASK='255.255.255.0'
+ENV LANDNS='192.168.5.1'
+ENV IPTVIP='192.168.1.8'
+ENV IPTVETH='eth0.100'
+ENV CLASH_URL='http://192.168.5.15:8060/clash/clash.yaml'
+CMD ["/sbin/init"]

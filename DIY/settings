@@ -136,7 +136,7 @@ sed -i "s/http:\/\/192.168.1.1:4022/http:\/\/$(uci -q get network.wan.ipaddr):70
 sed -i "s/--cfg.udpxy_url/cfg.udpxy_url/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.group=true/cfg.group=false/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.feeds_update_interval=0/cfg.feeds_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
-sed -i "s/cfg.playlists_update_interval=0/cfg.playlists_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
+#sed -i "s/cfg.playlists_update_interval=0/cfg.playlists_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.name='UPnP-IPTV'/cfg.name='UPnP-$(uci -q get system.@system[0].hostname)'/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c29a'/cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c27b'/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/    { 'vimeo',          'channel\/hd',           'Vimeo HD Channel' },/--    { 'vimeo',          'channel\/hd',           'Vimeo HD Channel' },/g" /usr/share/xupnpd/xupnpd.lua

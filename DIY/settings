@@ -1,0 +1,202 @@
+#!/bin/sh
+
+echo -e '542056\n542056' | passwd root
+uci set system.@system[0].hostname='DOCKER'
+uci set firewall.@defaults[0].forward='ACCEPT'
+uci set firewall.@zone[1].input='ACCEPT'
+
+uci add firewall zone
+uci set firewall.@zone[-1].name='iptv'
+uci set firewall.@zone[-1].input='ACCEPT'
+uci set firewall.@zone[-1].output='ACCEPT'
+uci set firewall.@zone[-1].forward='REJECT'
+uci set firewall.@zone[-1].masq='1'
+uci add_list firewall.@zone[-1].network='iptv'
+
+uci commit firewall
+
+uci delete dropbear.@dropbear[0].Interface
+uci commit dropbear
+uci set upnpd.@upnpd[0].enabled=1
+uci commit upnpd
+
+uci set dhcp.lan.ra='relay'
+uci set dhcp.lan.dhcpv6='relay'
+uci set dhcp.lan.ndp='relay'
+uci set dhcp.wan6=dhcp
+uci set dhcp.wan6.interface='wan6'
+uci set dhcp.wan6.ignore='1'
+uci set dhcp.wan6.master='1'
+uci set dhcp.wan6.ra='relay'
+uci set dhcp.wan6.dhcpv6='relay'
+uci set dhcp.wan6.ndp='relay'
+
+uci set dhcp.@dnsmasq[0].addnhosts='/etc/dnsmasq.hosts'
+uci commit dhcp
+
+uci set network.wan=interface
+uci set network.wan.proto='static'
+uci set network.wan.device=$WANETH
+uci set network.wan.ipaddr=$WANIP
+uci set network.wan.netmask=$WANNETMASK
+uci set network.wan.gateway=$WANGATEWAY
+uci set network.wan.dns=$WANDNS
+
+uci set network.lan.device=$LANETH
+uci set network.lan.ipaddr=$LANIP
+
+uci set network.iptv=interface
+uci set network.iptv.proto='static'
+uci set network.iptv.device=$IPTVETH
+uci set network.iptv.ipaddr=$IPTVIP
+
+uci set network.wan6=interface
+uci set network.wan6.device=$WAN6ETH
+uci set network.wan6.proto='dhcpv6'
+
+#uci del network.globals
+uci del network.globals.ula_prefix
+#uci set network.globals.packet_steering='1'
+
+uci commit network
+
+echo "0 3 * * * curl -o /etc/dnsmasq.hosts https://gitlab.com/ineo6/hosts/-/raw/master/next-hosts && /etc/init.d/dnsmasq restart" >> /etc/crontabs/root
+
+#echo '
+#net.ipv6.conf.all.disable_ipv6=0
+#net.ipv6.conf.default.disable_ipv6=0
+#net.ipv6.conf.default.accept_ra=2
+#net.ipv6.conf.all.accept_ra=2' >> /etc/sysctl.conf
+
+uci set msd_lite.@instance[0].enabled='1'
+uci set msd_lite.@instance[0].network='iptv'
+uci set msd_lite.@instance[0].bind_to_cpu='1'
+uci set msd_lite.@instance[0].drop_slow_clients='1'
+uci commit msd_lite
+
+uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
+uci commit uhttpd
+
+echo "<?php
+    header('Content-Type: text/json;charset=UTF-8');
+
+    \$dir=dirname(__FILE__);
+    \$files = glob('list/*.m3u');
+    \$result='';
+    foreach (\$files as \$file) {  
+        \$fsize=filesize(\$file);
+        \$myfile = fopen(\$file, \"r\") or die(\"Unable to open file!\");
+        \$txt= fread(\$myfile,\$fsize);
+        fclose(\$myfile);
+        \$txt=\$txt.\"\\r\\n\";
+        \$result=\$result.\$txt;
+    };
+    echo \$result;
+
+    \$data = file_get_contents('http://watchtv.fja.bcs.ottcn.com:8080/cms-lvp-epg/lvps/channelList?abilityString=%257B%2522abilities');
+    echo '#EXTM3U url-tvg=\"http://epg.51zmt.top:8000/e.xml\" x-tvg-url=\"http://epg.51zmt.top:8000/e.xml.gz\"'.\"\\r\\n\";
+    foreach (json_decode(\$data) -> content -> channels as \$v){
+        \$url = str_replace('igmp://', 'http://$(uci -q get network.wan.ipaddr):7088/udp/', explode('/1.m3u',\$v->resolution[0]->multicastUrl)[0]);
+        if(\$url == true){
+            echo '#EXTINF:-1 tvg-id=\"'.\$v->num.'\" tvg-name=\"'.\$v->name.'\" tvg-logo=\"'.\$v->resolution[0]->poster[0]->posterUrl.'\",'.\$v->name.''.\"\\r\\n\";
+            echo ''.\$url.''.\"\\r\\n\";
+            };
+    };
+
+?>" >> /www/iptv.php
+
+echo "<?php
+    header('Content-Type: text/json;charset=UTF-8');
+
+    \$dir=dirname(__FILE__);
+    \$files = glob('list/*.diyp');
+    \$result='';
+    foreach (\$files as \$file) {  
+        \$fsize=filesize(\$file);
+        \$myfile = fopen(\$file, \"r\") or die(\"Unable to open file!\");
+        \$txt= fread(\$myfile,\$fsize);
+        fclose(\$myfile);
+        \$txt=\$txt.\"\\r\\n\";
+        \$result=\$result.\$txt;
+    };
+    echo \$result;
+
+    \$data = file_get_contents('http://watchtv.fja.bcs.ottcn.com:8080/cms-lvp-epg/lvps/channelList?abilityString=%257B%2522abilities');
+    echo 'IPTV,#genre#'.\"\\r\\n\";
+    foreach (json_decode(\$data) -> content -> channels as \$v){
+        \$url = str_replace('igmp://', 'http://$(uci -q get network.wan.ipaddr):7088/udp/', explode('/1.m3u',\$v->resolution[0]->multicastUrl)[0]);
+        if(\$url == true) echo ''.\$v->name.','.\$url.''.\"\\r\\n\";
+    };
+
+?>" >> /www/diyp.php
+
+sed -i "s/cfg.ssdp_interface='br-lan'/cfg.ssdp_interface='$(uci -q get network.wan.device)'/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/cfg.mcast_interface='eth1'/cfg.mcast_interface='$(uci -q get network.iptv.device)'/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/http:\/\/192.168.1.1:4022/http:\/\/$(uci -q get network.wan.ipaddr):7088/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/--cfg.udpxy_url/cfg.udpxy_url/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/cfg.group=true/cfg.group=false/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/cfg.feeds_update_interval=0/cfg.feeds_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/cfg.playlists_update_interval=0/cfg.playlists_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/cfg.name='UPnP-IPTV'/cfg.name='UPnP-$(uci -q get system.@system[0].hostname)'/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c29a'/cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c27b'/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/    { 'vimeo',          'channel\/hd',           'Vimeo HD Channel' },/--    { 'vimeo',          'channel\/hd',           'Vimeo HD Channel' },/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/    { 'vimeo',          'channel\/hdxs',         'Vimeo Xtreme sports' },/--    { 'vimeo',          'channel\/hdxs',         'Vimeo Xtreme sports' },/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/    { 'vimeo',          'channel\/mtb',          'Vimeo MTB Channel' },/--    { 'vimeo',          'channel\/mtb',          'Vimeo MTB Channel' },/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/    { 'youtube',        'channel\/top_rated',    'YouTube Top Rated' },/--    { 'youtube',        'channel\/top_rated',    'YouTube Top Rated' },\n    { 'generic',        'http:\/\/127.0.0.1\/iptv.php', 'iptv' },/g" /usr/share/xupnpd/xupnpd.lua
+
+chmod 4755 /etc/openclash/core/clash_meta
+
+uci set openclash.config.enable='1'
+uci del openclash.@authentication[0]
+uci del openclash.config.dashboard_password
+
+uci set openclash.config.auto_restart='1'
+uci set openclash.config.auto_restart_week_time='*'
+uci set openclash.config.auto_restart_day_time='3'
+
+uci set openclash.config.config_path='/etc/openclash/config/clash.yaml'
+uci set openclash.config.config_reload='1'
+
+#uci set openclash.config.chnr_auto_update='1'
+#uci set openclash.config.geo_auto_update='1'
+#uci set openclash.config.geoip_auto_update='1'
+#uci set openclash.config.geosite_auto_update='1'
+#uci set openclash.config.other_rule_auto_update='1'
+
+uci set openclash.config.auto_update='1'
+uci set openclash.config.config_auto_update_mode='1'
+uci set openclash.config.config_update_interval='90'
+
+uci add openclash config_subscribe
+uci set openclash.@config_subscribe[-1].enabled='1'
+uci set openclash.@config_subscribe[-1].name='clash'
+uci set openclash.@config_subscribe[-1].address=$CLASH_URL
+uci set openclash.@config_subscribe[-1].sub_ua='clash.meta'
+
+
+uci set openclash.config.en_mode='fake-ip-mix'
+
+#uci set openclash.config.operation_mode='redir-host'
+#uci set openclash.config.en_mode='redir-host-mix'
+
+uci set openclash.config.stack_type='mixed'
+
+#uci set openclash.config.skip_proxy_address='1'
+uci set openclash.config.ipv6_dns='1'
+
+uci set openclash.config.enable_custom_dns='1'
+uci set openclash.config.enable_tcp_concurrent='1'
+
+for section in $(uci show openclash | grep -E '@dns_servers\[.*\]\.(group|enabled)' | awk -F. '/group=/ {gsub(/'\''/,""); if($3 ~ /group=nameserver/) print $1"."$2} /enabled=1/ {print $1"."$2}'); do 
+    uci set "${section}.enabled=0";
+done && uci commit openclash
+
+uci set openclash.@dns_servers[-1]=dns_servers
+uci set openclash.@dns_servers[-1].enabled='1'
+uci set openclash.@dns_servers[-1].group='nameserver'
+uci set openclash.@dns_servers[-1].type='udp'
+uci set openclash.@dns_servers[-1].ip='192.168.5.82'
+
+uci commit openclash
+
+exit 0

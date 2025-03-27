@@ -81,6 +81,8 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
         cp -rf $GITHUB_WORKSPACE/DIY/settings package/base-files/files/etc/uci-defaults/settings
+        mkdir -p feeds/luci/applications/luci-app-openclash/root/etc/openclash/core
+        curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.3/mihomo-linux-arm64-v1.19.3.gz | gzip -d > feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0

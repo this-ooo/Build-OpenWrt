@@ -131,10 +131,10 @@ echo "<?php
 ?>" >> /www/diyp.php
 
 sed -i "s/cfg.ssdp_interface='br-lan'/cfg.ssdp_interface='$(uci -q get network.wan.device)'/g" /usr/share/xupnpd/xupnpd.lua
-sed -i "s/cfg.mcast_interface='eth1'/cfg.mcast_interface='$(uci -q get network.iptv.device)'/g" /usr/share/xupnpd/xupnpd.lua
+sed -i "s/cfg.mcast_interface='eth1'/-- cfg.mcast_interface='$(uci -q get network.iptv.device)'/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/http:\/\/192.168.1.1:4022/http:\/\/$(uci -q get network.wan.ipaddr):7088/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/--cfg.udpxy_url/cfg.udpxy_url/g" /usr/share/xupnpd/xupnpd.lua
-sed -i "s/cfg.group=true/cfg.group=false/g" /usr/share/xupnpd/xupnpd.lua
+#sed -i "s/cfg.group=true/cfg.group=false/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.feeds_update_interval=0/cfg.feeds_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
 #sed -i "s/cfg.playlists_update_interval=0/cfg.playlists_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.name='UPnP-IPTV'/cfg.name='UPnP-$(uci -q get system.@system[0].hostname)'/g" /usr/share/xupnpd/xupnpd.lua

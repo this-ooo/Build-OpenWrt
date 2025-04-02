@@ -78,64 +78,42 @@ uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 uci commit uhttpd
 
 echo "<?php
-    header('Content-Type: text/json;charset=UTF-8');
-
-    \$dir=dirname(__FILE__);
-    \$files = glob('list/*.m3u');
-    \$result='';
-    foreach (\$files as \$file) {  
-        \$fsize=filesize(\$file);
-        \$myfile = fopen(\$file, \"r\") or die(\"Unable to open file!\");
-        \$txt= fread(\$myfile,\$fsize);
-        fclose(\$myfile);
-        \$txt=\$txt.\"\\r\\n\";
-        \$result=\$result.\$txt;
-    };
-    echo \$result;
-
-    \$data = file_get_contents('http://watchtv.fja.bcs.ottcn.com:8080/cms-lvp-epg/lvps/channelList?abilityString=%257B%2522abilities');
-    echo '#EXTM3U url-tvg=\"http://epg.51zmt.top:8000/e.xml\" x-tvg-url=\"http://epg.51zmt.top:8000/e.xml.gz\"'.\"\\r\\n\";
-    foreach (json_decode(\$data) -> content -> channels as \$v){
-        \$url = str_replace('igmp://', 'http://$(uci -q get network.wan.ipaddr):7088/udp/', explode('/1.m3u',\$v->resolution[0]->multicastUrl)[0]);
-        if(\$url == true){
-            echo '#EXTINF:-1 tvg-id=\"'.\$v->num.'\" tvg-name=\"'.\$v->name.'\" tvg-logo=\"'.\$v->resolution[0]->poster[0]->posterUrl.'\",'.\$v->name.''.\"\\r\\n\";
-            echo ''.\$url.''.\"\\r\\n\";
-            };
-    };
-
-?>" >> /www/iptv.php
-
-echo "<?php
-    header('Content-Type: text/json;charset=UTF-8');
-
-    \$dir=dirname(__FILE__);
-    \$files = glob('list/*.diyp');
-    \$result='';
-    foreach (\$files as \$file) {  
-        \$fsize=filesize(\$file);
-        \$myfile = fopen(\$file, \"r\") or die(\"Unable to open file!\");
-        \$txt= fread(\$myfile,\$fsize);
-        fclose(\$myfile);
-        \$txt=\$txt.\"\\r\\n\";
-        \$result=\$result.\$txt;
-    };
-    echo \$result;
-
-    \$data = file_get_contents('http://watchtv.fja.bcs.ottcn.com:8080/cms-lvp-epg/lvps/channelList?abilityString=%257B%2522abilities');
-    echo 'IPTV,#genre#'.\"\\r\\n\";
-    foreach (json_decode(\$data) -> content -> channels as \$v){
-        \$url = str_replace('igmp://', 'http://$(uci -q get network.wan.ipaddr):7088/udp/', explode('/1.m3u',\$v->resolution[0]->multicastUrl)[0]);
-        if(\$url == true) echo ''.\$v->name.','.\$url.''.\"\\r\\n\";
-    };
-
-?>" >> /www/diyp.php
+// 新增格式参数判断
+\$type = \$_GET['type'] ?? 'm3u';
+// 根据格式设置响应头
+if(strtolower(\$type) === 'diyp') {
+    header('Content-Type: text/plain;charset=UTF-8');
+    echo \"IPTV,#genre#\r\n\";
+} else {
+    header('Content-Type: text/plain;charset=UTF-8');
+    echo '#EXTM3U url-tvg=\"http://epg.51zmt.top:8000/e.xml\" x-tvg-url=\"http://epg.51zmt.top:8000/e.xml.gz\"'.\"\r\n\";
+}
+// 获取原始数据
+\$data = file_get_contents('http://watchtv.fja.bcs.ottcn.com:8080/cms-lvp-epg/lvps/channelList?abilityString=x');
+\$channels = json_decode(\$data)->content->channels;
+// 代理地址获取方式
+\$proxyServer = \$_GET['proxy'] ?? '192.168.5.9:7088';
+// 统一处理播放地址
+foreach (\$channels as \$v) {
+    \$rawUrl = explode('/1.m3u', \$v->resolution[0]->multicastUrl)[0];
+    if(!str_starts_with(\$rawUrl, 'igmp://')) continue;
+    // 动态生成代理地址
+    \$proxyUrl = \"http://{\$proxyServer}/udp/\" . substr(\$rawUrl, 7); // 移除igmp://前缀
+    if(\$type === 'diyp') {
+        echo \"{$v->name},{\$proxyUrl}\r\n\";
+    } else {
+        \$poster = \$v->resolution[0]->poster[0]->posterUrl;
+        echo '#EXTINF:-1 tvg-id=\"'.$v->num.'\" tvg-logo=\"'.$poster.'\" group-title=\"电视\",'.$v->name.\"\r\n\";
+        echo \$proxyUrl.\"\r\n\";
+    }
+}" >> /www/iptv.php
 
 sed -i "s/cfg.ssdp_interface='br-lan'/cfg.ssdp_interface='$(uci -q get network.wan.device)'/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.mcast_interface='eth1'/-- cfg.mcast_interface='$(uci -q get network.iptv.device)'/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/http:\/\/192.168.1.1:4022/http:\/\/$(uci -q get network.wan.ipaddr):7088/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/--cfg.udpxy_url/cfg.udpxy_url/g" /usr/share/xupnpd/xupnpd.lua
 #sed -i "s/cfg.group=true/cfg.group=false/g" /usr/share/xupnpd/xupnpd.lua
-sed -i "s/cfg.feeds_update_interval=0/cfg.feeds_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
+#sed -i "s/cfg.feeds_update_interval=0/cfg.feeds_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
 #sed -i "s/cfg.playlists_update_interval=0/cfg.playlists_update_interval=60/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.name='UPnP-IPTV'/cfg.name='UPnP-$(uci -q get system.@system[0].hostname)'/g" /usr/share/xupnpd/xupnpd.lua
 sed -i "s/cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c29a'/cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c27b'/g" /usr/share/xupnpd/xupnpd.lua

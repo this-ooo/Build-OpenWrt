@@ -78,9 +78,9 @@ uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 uci commit uhttpd
 
 echo "<?php
-// ÐÂÔö¸ñÊ½²ÎÊýÅÐ¶Ï
+// æ–°å¢žæ ¼å¼å‚æ•°åˆ¤æ–­
 \$type = \$_GET['type'] ?? 'm3u';
-// ¸ù¾Ý¸ñÊ½ÉèÖÃÏìÓ¦Í·
+// æ ¹æ®æ ¼å¼è®¾ç½®å“åº”å¤´
 if(strtolower(\$type) === 'diyp') {
     header('Content-Type: text/plain;charset=UTF-8');
     echo \"IPTV,#genre#\r\n\";
@@ -88,22 +88,22 @@ if(strtolower(\$type) === 'diyp') {
     header('Content-Type: text/plain;charset=UTF-8');
     echo '#EXTM3U url-tvg=\"http://epg.51zmt.top:8000/e.xml\" x-tvg-url=\"http://epg.51zmt.top:8000/e.xml.gz\"'.\"\r\n\";
 }
-// »ñÈ¡Ô­Ê¼Êý¾Ý
+// èŽ·å–åŽŸå§‹æ•°æ®
 \$data = file_get_contents('http://watchtv.fja.bcs.ottcn.com:8080/cms-lvp-epg/lvps/channelList?abilityString=x');
 \$channels = json_decode(\$data)->content->channels;
-// ´úÀíµØÖ·»ñÈ¡·½Ê½
+// ä»£ç†åœ°å€èŽ·å–æ–¹å¼
 \$proxyServer = \$_GET['proxy'] ?? '192.168.5.9:7088';
-// Í³Ò»´¦Àí²¥·ÅµØÖ·
+// ç»Ÿä¸€å¤„ç†æ’­æ”¾åœ°å€
 foreach (\$channels as \$v) {
     \$rawUrl = explode('/1.m3u', \$v->resolution[0]->multicastUrl)[0];
     if(!str_starts_with(\$rawUrl, 'igmp://')) continue;
-    // ¶¯Ì¬Éú³É´úÀíµØÖ·
-    \$proxyUrl = \"http://{\$proxyServer}/udp/\" . substr(\$rawUrl, 7); // ÒÆ³ýigmp://Ç°×º
+    // åŠ¨æ€ç”Ÿæˆä»£ç†åœ°å€
+    \$proxyUrl = \"http://{\$proxyServer}/udp/\" . substr(\$rawUrl, 7); // ç§»é™¤igmp://å‰ç¼€
     if(\$type === 'diyp') {
-        echo \"{$v->name},{\$proxyUrl}\r\n\";
+        echo \"{\$v->name},{\$proxyUrl}\r\n\";
     } else {
         \$poster = \$v->resolution[0]->poster[0]->posterUrl;
-        echo '#EXTINF:-1 tvg-id=\"'.$v->num.'\" tvg-logo=\"'.$poster.'\" group-title=\"µçÊÓ\",'.$v->name.\"\r\n\";
+        echo '#EXTINF:-1 tvg-id=\"'.\$v->num.'\" tvg-logo=\"'.\$poster.'\" group-title=\"ç”µè§†\",'.\$v->name.\"\r\n\";
         echo \$proxyUrl.\"\r\n\";
     }
 }" >> /www/iptv.php

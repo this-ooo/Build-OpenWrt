@@ -29,7 +29,7 @@ uci set network.wan6.device=$WAN6ETH
 uci set network.wan6.proto='dhcpv6'
 
 #uci del network.globals
-#uci del network.globals.ula_prefix
+uci del network.globals.ula_prefix
 #uci set network.globals.packet_steering='1'
 
 uci commit network

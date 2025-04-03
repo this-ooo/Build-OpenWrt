@@ -4,7 +4,6 @@ echo -e '542056\n542056' | passwd root
 uci set system.@system[0].hostname='DOCKER'
 uci set firewall.@defaults[0].forward='ACCEPT'
 uci set firewall.@zone[1].input='ACCEPT'
-
 uci commit firewall
 
 uci delete dropbear.@dropbear[0].Interface
@@ -12,48 +11,30 @@ uci commit dropbear
 uci set upnpd.@upnpd[0].enabled=1
 uci commit upnpd
 
-uci set dhcp.lan.ra='relay'
-uci set dhcp.lan.dhcpv6='relay'
-uci set dhcp.lan.ndp='relay'
-uci set dhcp.wan6=dhcp
-uci set dhcp.wan6.interface='wan6'
-uci set dhcp.wan6.ignore='1'
-uci set dhcp.wan6.master='1'
-uci set dhcp.wan6.ra='relay'
-uci set dhcp.wan6.dhcpv6='relay'
-uci set dhcp.wan6.ndp='relay'
+uci del dhcp.lan.ra
+uci del dhcp.lan.dhcpv6
+uci del dhcp.lan.start='100'
+uci del dhcp.lan.limit='150'
+uci del dhcp.lan.leasetime='12h'
+uci set dhcp.lan.ignore='1'
 
 uci set dhcp.@dnsmasq[0].addnhosts='/etc/dnsmasq.hosts'
 uci commit dhcp
 
-uci set network.wan=interface
-uci set network.wan.proto='static'
-uci set network.wan.device=$WANETH
-uci set network.wan.ipaddr=$WANIP
-uci set network.wan.netmask=$WANNETMASK
-uci set network.wan.gateway=$WANGATEWAY
-uci set network.wan.dns=$WANDNS
-
-uci set network.lan.device=$LANETH
 uci set network.lan.ipaddr=$LANIP
-
+uci set network.lan.gateway=$LANGATEWAY
+uci set network.lan.dns=$LANDNS
 uci set network.wan6=interface
 uci set network.wan6.device=$WAN6ETH
 uci set network.wan6.proto='dhcpv6'
 
 #uci del network.globals
-uci del network.globals.ula_prefix
+#uci del network.globals.ula_prefix
 #uci set network.globals.packet_steering='1'
 
 uci commit network
 
 echo "0 3 * * * curl -o /etc/dnsmasq.hosts https://gitlab.com/ineo6/hosts/-/raw/master/next-hosts && /etc/init.d/dnsmasq restart" >> /etc/crontabs/root
-
-#echo '
-#net.ipv6.conf.all.disable_ipv6=0
-#net.ipv6.conf.default.disable_ipv6=0
-#net.ipv6.conf.default.accept_ra=2
-#net.ipv6.conf.all.accept_ra=2' >> /etc/sysctl.conf
 
 chmod 4755 /etc/openclash/core/clash_meta
 

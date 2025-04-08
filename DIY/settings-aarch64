@@ -78,15 +78,15 @@ uci set openclash.config.ipv6_dns='1'
 uci set openclash.config.enable_custom_dns='1'
 uci set openclash.config.enable_tcp_concurrent='1'
 
-for section in $(uci show openclash | grep -E '@dns_servers\[.*\]\.(group|enabled)' | awk -F. '/group=/ {gsub(/'\''/,""); if($3 ~ /group=nameserver/) print $1"."$2} /enabled=1/ {print $1"."$2}'); do 
-    uci set "${section}.enabled=0";
-done && uci commit openclash
+#for section in $(uci show openclash | grep -E '@dns_servers\[.*\]\.(group|enabled)' | awk -F. '/group=/ {gsub(/'\''/,""); if($3 ~ /group=nameserver/) print $1"."$2} /enabled=1/ {print $1"."$2}'); do 
+#    uci set "${section}.enabled=0";
+#done && uci commit openclash
 
-uci set openclash.@dns_servers[-1]=dns_servers
-uci set openclash.@dns_servers[-1].enabled='1'
-uci set openclash.@dns_servers[-1].group='nameserver'
-uci set openclash.@dns_servers[-1].type='udp'
-uci set openclash.@dns_servers[-1].ip='192.168.5.82'
+#uci set openclash.@dns_servers[-1]=dns_servers
+#uci set openclash.@dns_servers[-1].enabled='1'
+#uci set openclash.@dns_servers[-1].group='nameserver'
+#uci set openclash.@dns_servers[-1].type='udp'
+#uci set openclash.@dns_servers[-1].ip='192.168.5.82'
 
 uci commit openclash
 

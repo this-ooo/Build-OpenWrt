@@ -33,7 +33,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04.3
 
     steps:
     - name: Checkout
@@ -43,9 +43,10 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-        sudo -E apt-get -qq update
-        sudo -E apt-get -qq install $(curl -fsSL is.gd/depends_ubuntu_2204)
+        #sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        #sudo -E apt-get -qq update
+        sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
+        #sudo -E apt-get -qq install $(curl -fsSL is.gd/depends_ubuntu_2404)
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -82,7 +83,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
         cp -rf $GITHUB_WORKSPACE/DIY/settings-x86_64 package/base-files/files/etc/uci-defaults/settings
         mkdir -p feeds/luci/applications/luci-app-openclash/root/etc/openclash/core
-        curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.4/mihomo-linux-amd64-compatible-v1.19.4.gz | gzip -d > feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
+        curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.17/mihomo-linux-amd64-compatible-v1.19.17.gz | gzip -d > feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0

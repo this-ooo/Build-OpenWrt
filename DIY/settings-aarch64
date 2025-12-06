@@ -31,7 +31,7 @@ uci set network.wan6.proto='dhcpv6'
 
 #uci del network.globals
 uci del network.globals.ula_prefix
-#uci set network.globals.packet_steering='1'
+uci set network.globals.packet_steering='1'
 
 uci commit network
 
@@ -50,11 +50,11 @@ uci set openclash.config.auto_restart_day_time='3'
 uci set openclash.config.config_path='/etc/openclash/config/clash.yaml'
 uci set openclash.config.config_reload='1'
 
-#uci set openclash.config.chnr_auto_update='1'
-#uci set openclash.config.geo_auto_update='1'
-#uci set openclash.config.geoip_auto_update='1'
-#uci set openclash.config.geosite_auto_update='1'
-#uci set openclash.config.other_rule_auto_update='1'
+uci set openclash.config.chnr_auto_update='1'
+uci set openclash.config.geo_auto_update='1'
+uci set openclash.config.geoip_auto_update='1'
+uci set openclash.config.geosite_auto_update='1'
+uci set openclash.config.other_rule_auto_update='1'
 
 uci set openclash.config.auto_update='1'
 uci set openclash.config.config_auto_update_mode='1'
@@ -66,12 +66,11 @@ uci set openclash.@config_subscribe[-1].name='clash'
 uci set openclash.@config_subscribe[-1].address=$CLASH_URL
 uci set openclash.@config_subscribe[-1].sub_ua='clash.meta'
 
-uci set openclash.config.en_mode='fake-ip-mix'
+uci set openclash.config.en_mode='fake-ip-tun'
+#uci set openclash.config.en_mode='fake-ip-mix'
 
 #uci set openclash.config.operation_mode='redir-host'
 #uci set openclash.config.en_mode='redir-host-mix'
-
-uci set openclash.config.stack_type='mixed'
 
 uci commit openclash
 

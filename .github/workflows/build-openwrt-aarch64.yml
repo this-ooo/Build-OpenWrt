@@ -82,7 +82,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
         cp -rf $GITHUB_WORKSPACE/DIY/settings-aarch64 package/base-files/files/etc/uci-defaults/settings
         mkdir -p feeds/luci/applications/luci-app-openclash/root/etc/openclash/core
-        curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.10/mihomo-linux-arm64-v1.19.10.gz | gzip -d > feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
+        curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.17/mihomo-linux-arm64-v1.19.17.gz | gzip -d > feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0

@@ -13,7 +13,12 @@ IMG_NAME=openwrt
 mkdir -p "$TMPDIR" && \
 gzip -dc *-rootfs.tar.gz | ( cd "$TMPDIR" && tar xf - ) && \
 (cd "$TMPDIR" && tar cf ../${IMG_NAME}-rootfs-patched.tar .) && \
-docker build -t ${IMG_NAME}:${TAG} . && \
+
+docker buildx create --name mybuilder --use && \
+docker buildx inspect --bootstrap && \
+docker buildx build --platform linux/amd64 -t ${IMG_NAME}:${TAG} --output=type=docker . && \
+
+#docker build -t ${IMG_NAME}:${TAG} . && \
 rm -f  ${IMG_NAME}-rootfs-patched.tar && \
 rm -rf "$TMPDIR" && \
 docker save ${IMG_NAME}:${TAG}  > docker-img-${IMG_NAME}-${TAG}.tar

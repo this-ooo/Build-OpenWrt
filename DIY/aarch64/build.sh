@@ -16,7 +16,7 @@ gzip -dc *-rootfs.tar.gz | ( cd "$TMPDIR" && tar xf - ) && \
 
 docker buildx create --name mybuilder --use && \
 docker buildx inspect --bootstrap && \
-docker buildx build --platform linux/amd64 -t ${IMG_NAME}:${TAG} --output=type=docker . && \
+docker buildx build --platform linux/arm64 -t ${IMG_NAME}:${TAG} --output=type=docker . && \
 
 #docker build -t ${IMG_NAME}:${TAG} . && \
 rm -f  ${IMG_NAME}-rootfs-patched.tar && \

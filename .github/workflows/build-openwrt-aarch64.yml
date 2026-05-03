@@ -19,6 +19,7 @@ env:
   CONFIG_FILE: aarch64.config
   DIY_P1_SH: DIY/diy-part1.sh
   DIY_P2_SH: DIY/diy-part2.sh
+  UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
 

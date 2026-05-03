@@ -69,7 +69,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P2_SH
         cp -rf $GITHUB_WORKSPACE/DIY/settings-aarch64 package/base-files/files/etc/uci-defaults/settings
         mkdir -p feeds/luci/applications/luci-app-openclash/root/etc/openclash/core
-        curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.24/mihomo-linux-arm64-v1.19.24.gz | gzip -d > feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
+        curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.24/mihomo-linux-arm64-v1.19.24.gz | gzip -d > package/openclash/luci-app-openclash/root/etc/openclash/core/clash_meta
 
     - name: Download package
       id: package

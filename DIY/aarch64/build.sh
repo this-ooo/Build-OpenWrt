@@ -18,6 +18,8 @@ docker buildx create --name mybuilder --use && \
 docker buildx inspect --bootstrap && \
 docker buildx build --platform linux/arm64 -t ${IMG_NAME}:${TAG} --output=type=docker . && \
 
+docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push && \
+
 #docker build -t ${IMG_NAME}:${TAG} . && \
 rm -f  ${IMG_NAME}-rootfs-patched.tar && \
 rm -rf "$TMPDIR" && \

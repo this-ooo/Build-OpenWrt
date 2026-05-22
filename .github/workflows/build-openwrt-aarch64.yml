@@ -19,7 +19,6 @@ env:
   CONFIG_FILE: aarch64.config
   DIY_P1_SH: DIY/diy-part1.sh
   DIY_P2_SH: DIY/diy-part2.sh
-  #UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
 
@@ -78,8 +77,8 @@ jobs:
           cd openwrt
           make defconfig
           make download -j$(nproc)
-          #find dl -size -1024c -exec ls -l {} \;
-          #find dl -size -1024c -exec rm -f {} \;
+          find dl -size -1024c -exec ls -l {} \;
+          find dl -size -1024c -exec rm -f {} \;
   
       - name: Compile the firmware
         id: compile
@@ -121,12 +120,12 @@ jobs:
   
 
 
-      - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GHCR_TOKEN}}
+      #- name: 'Login to GitHub Container Registry'
+        #uses: docker/login-action@v1
+        #with:
+          #registry: ghcr.io
+          #username: ${{github.actor}}
+          #password: ${{secrets.GHCR_TOKEN}}
   
       - name: Image - build docker image
         run: |

@@ -19,7 +19,7 @@ env:
   CONFIG_FILE: aarch64.config
   DIY_P1_SH: DIY/diy-part1.sh
   DIY_P2_SH: DIY/diy-part2.sh
-  UPLOAD_FIRMWARE: true
+  #UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -43,7 +43,6 @@ jobs:
         working-directory: /workdir
         run: |
           df -hT $PWD
-          #git clone $REPO_URL -b $REPO_BRANCH openwrt
           git clone -b $REPO_BRANCH --single-branch --filter=blob:none $REPO_URL openwrt
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
   
@@ -69,7 +68,7 @@ jobs:
           $GITHUB_WORKSPACE/$DIY_P2_SH
           cp -rf $GITHUB_WORKSPACE/DIY/settings-aarch64 package/base-files/files/etc/uci-defaults/settings
           mkdir -p package/openclash/luci-app-openclash/root/etc/openclash/core
-          #curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.24/mihomo-linux-arm64-v1.19.24.gz | gzip -d > package/openclash/luci-app-openclash/root/etc/openclash/core/clash_meta
+          curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.24/mihomo-linux-arm64-v1.19.24.gz | gzip -d > package/openclash/luci-app-openclash/root/etc/openclash/core/clash_meta
   
       - name: Download package
         id: package
@@ -95,13 +94,6 @@ jobs:
         if: (!cancelled())
         run: df -hT
   
-     # - name: Upload bin directory
-     #   uses: actions/upload-artifact@main
-       # if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
-      #  with:
-       #   name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-       #   path: openwrt/bin
-  
       - name: Organize files
         id: organize
         if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
@@ -111,21 +103,12 @@ jobs:
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
   
-      - name: Upload firmware directory
-        uses: actions/upload-artifact@main
-        if: steps.organize.outputs.status == 'success' && !cancelled()
-        with:
-          name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-          path: ${{ env.FIRMWARE }}/*.gz
-  
-
-
-      #- name: 'Login to GitHub Container Registry'
-        #uses: docker/login-action@v1
+      #- name: Upload firmware directory
+        #uses: actions/upload-artifact@main
+        #if: steps.organize.outputs.status == 'success' && !cancelled()
         #with:
-          #registry: ghcr.io
-          #username: ${{github.actor}}
-          #password: ${{secrets.GHCR_TOKEN}}
+          #name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          #path: ${{ env.FIRMWARE }}/*.gz
   
       - name: Image - build docker image
         run: |

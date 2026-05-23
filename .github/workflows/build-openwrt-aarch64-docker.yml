@@ -50,7 +50,7 @@ jobs:
         id: organize
         run: |
           cp ${{ github.workspace }}/bin/targets/*/*/*.tar.gz ${{ github.workspace }}
-          sudo chmod a+x ${{ github.workspace }}/.tar.gz
+          sudo chmod a+x ${{ github.workspace }}/*.tar.gz
           cd ${{ github.workspace }}/
           gzip -d *.tar.gz
           docker buildx create --name mybuilder --use && \

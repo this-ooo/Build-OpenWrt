@@ -14,6 +14,8 @@ on:
 
 permissions:
   contents: write
+  packages: write
+  #contents: read
 
 env:
   REGISTRY: ghcr.io
@@ -47,13 +49,14 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context:
           file: ${{ github.workspace }}/DIY/aarch64/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
           
       - name: Upload - push to artifact file
         uses: actions/upload-artifact@main

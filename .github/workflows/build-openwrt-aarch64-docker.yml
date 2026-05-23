@@ -31,21 +31,12 @@ jobs:
       - name: Building armsr-armv8 QEMU ImmortalWrt
         run: |
           luci_version="${{ github.event.inputs.luci_version }}"
-          docker run --rm -i \
-            --user root \
+          docker run --rm \
             -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/DIY/aarch64/uci-defaults/settings-aarch64:/home/build/immortalwrt/files/etc/uci-defaults/settings-aarch64" \
             -v "${{ github.workspace }}/DIY/aarch64/.config:/home/build/immortalwrt/.config" \
             -v "${{ github.workspace }}/DIY/aarch64/build.sh:/home/build/immortalwrt/build.sh" \
             immortalwrt/imagebuilder:armsr-armv8-openwrt-${luci_version} /bin/bash /home/build/immortalwrt/build.sh
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: linux/arm64
-          
-      - name: Set up Docker Buildx  
-        uses: docker/setup-buildx-action@v2
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -57,8 +48,8 @@ jobs:
       - name: Organize files
         id: organize
         run: |
-          #sudo su
-          cd ${{ github.workspace }}/bin/targets/*/*
+          sudo chmod a+x ${{ github.workspace }}/bin/targets/*/*/
+          cd ${{ github.workspace }}/bin/targets/*/*/
           gzip -d *.tar.gz
           docker buildx create --name mybuilder --use && \
           docker buildx inspect --bootstrap && \

@@ -96,8 +96,22 @@ jobs:
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
-          cp $GITHUB_WORKSPACE/DIY/aarch64/* .
-          bash build.sh
+          cp $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile .
+          mkdir -p "$TMPDIR"
+          gzip -dc *-rootfs.tar.gz | tar -xf - -C "$TMPDIR"
+          cd "$TMPDIR"
+          tar -cf "../openwrt-rootfs-patched.tar" .
+          
+          docker buildx create --name mybuilder --use && \
+          docker buildx inspect --bootstrap && \
+          docker buildx build --platform linux/arm64 -t openwrt --output=type=docker . && \
+          
+          #docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push && \
+          
+          rm -f  openwrt-rootfs-patched.tar && \
+          rm -rf "$TMPDIR" && \
+          docker save openwrt  > docker-img-openwrt.tar
+
           echo "firmware=$PWD" >> $GITHUB_OUTPUT
 
       - name: Upload - push to artifact file

@@ -58,11 +58,11 @@ jobs:
         id: organize
         run: |
           sudo su
-          cd bin/targets/*/*
-          mkdir -p "$TMPDIR"
-          gzip -dc *-rootfs.tar.gz | tar -xf - -C "$TMPDIR"
-          cd "$TMPDIR"
-          tar -cf "../openwrt-rootfs-patched.tar" .
+          cd ${{ github.workspace }}/bin/targets/*/*
+          mkdir -p openwrt_rootfs
+          gzip -dc *-rootfs.tar.gz | ( cd openwrt_rootfs && tar xf - ) && \
+          (cd openwrt_rootfs && tar cf ../${IMAGE_NAME}-rootfs-patched.tar .) && \
+
           
           docker buildx create --name mybuilder --use && \
           docker buildx inspect --bootstrap && \
@@ -71,8 +71,8 @@ jobs:
           docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push && \
           
           rm -f  openwrt-rootfs-patched.tar && \
-          rm -rf "$TMPDIR" && \
-          docker save openwrt  > docker-img-openwrt.tar
+          rm -rf openwrt_rootfs && \
+          docker save openwrt  > docker-img-${IMAGE_NAME}.tar
 
           echo "firmware=$PWD" >> $GITHUB_OUTPUT
 

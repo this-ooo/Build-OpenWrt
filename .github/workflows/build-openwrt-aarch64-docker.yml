@@ -34,7 +34,7 @@ jobs:
           docker run --rm -i \
             --user root \
             -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
-            -v "${{ github.workspace }}/DIY/aarch64/uci-defaults/settings-aarch64:/home/build/immortalwrt/files/etc/uci-defaults/settings-aarch64" \
+            -v "${{ github.workspace }}/DIY/aarch64/uci-defaults:/home/build/immortalwrt/files/etc/uci-defaults" \
             -v "${{ github.workspace }}/DIY/aarch64/.config:/home/build/immortalwrt/.config" \
             -v "${{ github.workspace }}/DIY/aarch64/build.sh:/home/build/immortalwrt/build.sh" \
             immortalwrt/imagebuilder:armsr-armv8-openwrt-${luci_version} /bin/bash /home/build/immortalwrt/build.sh

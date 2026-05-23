@@ -26,7 +26,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@main
 
-      - name: Building armsr-armv8 QEMU ImmortalWrt 24.10.x
+      - name: Building armsr-armv8 QEMU ImmortalWrt
         run: |
           luci_version="${{ github.event.inputs.luci_version }}"
           docker run --rm -i \
@@ -39,9 +39,8 @@ jobs:
 
       - name: Copy Firmware to workspace
         run: |
-          cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.gz ${{ github.workspace }}
+          cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.tar ${{ github.workspace }}
           cp "${{ github.workspace }}/DIY/aarch64/Dockerfile ${{ github.workspace }}
-          #cd ${{ github.workspace }}/bin/targets/armsr/armv8/
           TMPDIR=openwrt_rootfs
           [ -d "$TMPDIR" ] && rm -rf "$TMPDIR"
           mkdir -p "$TMPDIR"
@@ -60,3 +59,9 @@ jobs:
           context:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          
+      - name: Upload - push to artifact file
+        uses: actions/upload-artifact@main
+        with:
+          name: Docker-OpenWrt-aarch64
+          path: ${{ github.workspace }}/bin/targets/armsr/armv8/*.tar

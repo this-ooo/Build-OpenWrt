@@ -67,7 +67,9 @@ jobs:
           $GITHUB_WORKSPACE/$DIY_P2_SH
           cp -rf $GITHUB_WORKSPACE/DIY/settings-aarch64 package/base-files/files/etc/uci-defaults/settings
           mkdir -p package/openclash/luci-app-openclash/root/etc/openclash/core
-          curl -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.24/mihomo-linux-arm64-v1.19.24.gz | gzip -d > package/openclash/luci-app-openclash/root/etc/openclash/core/clash_meta
+          LATEST_TAG=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)
+          echo "Latest mihomo version: $LATEST_TAG"
+          curl -L "https://github.com/MetaCubeX/mihomo/releases/download/${LATEST_TAG}/mihomo-linux-arm64-${LATEST_TAG}.gz" | gzip -d > package/openclash/luci-app-openclash/root/etc/openclash/core/clash_meta
   
       - name: Download package
         id: package
@@ -99,7 +101,7 @@ jobs:
           echo "firmware=$PWD" >> $GITHUB_OUTPUT
 
       - name: Upload - push to artifact file
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@main
         with:
           name: Docker-OpenWrt-aarch64
           path: ${{ steps.organize.outputs.firmware }}/*.tar

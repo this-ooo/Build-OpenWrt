@@ -7,7 +7,7 @@ on:
         description: "选择luci版本"
         required: true
         default: "25.12"
-        #type: choice
+        type: choice
         options:
           - 25.12
           - 25.12-SNAPSHOT
@@ -39,14 +39,14 @@ jobs:
 
       - name: Copy Firmware to workspace
         run: |
+          cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.tar ${{ github.workspace }}
           cd ${{ github.workspace }}/bin/targets/armsr/armv8/
           TMPDIR=openwrt_rootfs
-          #[ -d "$TMPDIR" ] && rm -rf "$TMPDIR"
+          [ -d "$TMPDIR" ] && rm -rf "$TMPDIR"
           mkdir -p "$TMPDIR"
           gzip -dc *-rootfs.tar.gz | ( cd "$TMPDIR" && tar xf - )
           (cd "$TMPDIR" && tar cf ../openwrt-rootfs-patched.tar .)
-          #cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.tar ${{ github.workspace }}
-          
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:

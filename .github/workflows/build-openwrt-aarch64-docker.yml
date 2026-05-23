@@ -57,6 +57,20 @@ jobs:
           file: ${{ github.workspace }}/DIY/aarch64/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Organize files
+        id: organize
+        run: |
+          cd ${{ github.workspace }}/bin/targets/armsr/armv8/
+          docker buildx create --name mybuilder --use && \
+          docker buildx inspect --bootstrap && \
+          docker buildx build -f ${{ github.workspace }}/DIY/aarch64/Dockerfile --platform linux/arm64 -t ${IMG_NAME}:${TAG} --output=type=docker . && \
+          docker buildx build -f ${{ github.workspace }}/DIY/aarch64/Dockerfile --platform linux/amd64,linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push && \
+          rm -f  ${IMG_NAME}-rootfs-patched.tar && \
+          rm -rf "$TMPDIR" && \
+          docker save ${IMG_NAME}:${TAG}  > docker-img-${IMG_NAME}-${TAG}.tar
+
+          echo "firmware=$PWD" >> $GITHUB_OUTPUT
           
       - name: Upload - push to artifact file
         uses: actions/upload-artifact@main

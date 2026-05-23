@@ -7,13 +7,13 @@ on:
         description: "选择luci版本"
         required: true
         default: "25.12"
-        type: choice
+        #type: choice
         options:
           - 25.12
           - 25.12-SNAPSHOT
 
-permissions:
-  contents: write
+#permissions:
+#  contents: write
 
 env:
   REGISTRY: ghcr.io
@@ -24,10 +24,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set executable permissions
-        run: chmod +x ${{ github.workspace }}/DIY/aarch64/build.sh
+        uses: actions/checkout@main
 
       - name: Building armsr-armv8 QEMU ImmortalWrt 24.10.x
         run: |

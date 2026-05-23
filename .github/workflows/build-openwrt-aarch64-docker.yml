@@ -61,15 +61,13 @@ jobs:
         run: |
           cp ${{ github.workspace }}/bin/targets/*/*/*.tar.gz ${{ github.workspace }}
           sudo chmod a+x ${{ github.workspace }}/*.tar.gz
-          cd ${{ github.workspace }}/
+          cd ${{ github.workspace }}
           gzip -d *.tar.gz
-          docker buildx create --name mybuilder --use && \
-          docker buildx inspect --bootstrap && \
-          docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t openwrt --output=type=docker . && \
-          
-          #docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push && \
-          
-          rm -f *.tar && \
+          docker buildx create --name mybuilder --use
+          docker buildx inspect --bootstrap
+          docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t openwrt --output=type=docker .
+          docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push
+          rm -f *.tar
           docker save openwrt  > docker-img-${IMAGE_NAME}.tar
 
           echo "firmware=$PWD" >> $GITHUB_OUTPUT

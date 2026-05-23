@@ -53,3 +53,31 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Organize files
+        id: organize
+        run: |
+          sudo su
+          cd bin/targets/*/*
+          mkdir -p "$TMPDIR"
+          gzip -dc *-rootfs.tar.gz | tar -xf - -C "$TMPDIR"
+          cd "$TMPDIR"
+          tar -cf "../openwrt-rootfs-patched.tar" .
+          
+          docker buildx create --name mybuilder --use && \
+          docker buildx inspect --bootstrap && \
+          docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t openwrt --output=type=docker . && \
+          
+          docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push && \
+          
+          rm -f  openwrt-rootfs-patched.tar && \
+          rm -rf "$TMPDIR" && \
+          docker save openwrt  > docker-img-openwrt.tar
+
+          echo "firmware=$PWD" >> $GITHUB_OUTPUT
+
+      - name: Upload - push to artifact file
+        uses: actions/upload-artifact@main
+        with:
+          name: Docker-OpenWrt-aarch64
+          path: ${{ steps.organize.outputs.firmware }}/*.tar

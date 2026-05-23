@@ -1,4 +1,4 @@
-name: build-QEMU-armsr-armv8-24.10.x
+name: build-QEMU-armsr-armv8
 
 on:
   workflow_dispatch:

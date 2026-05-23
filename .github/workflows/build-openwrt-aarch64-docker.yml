@@ -40,7 +40,7 @@ jobs:
       - name: Copy Firmware to workspace
         run: |
           cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.tar ${{ github.workspace }}
-          cd ${{ github.workspace }}/bin/targets/armsr/armv8/
+          #cd ${{ github.workspace }}/bin/targets/armsr/armv8/
           TMPDIR=openwrt_rootfs
           [ -d "$TMPDIR" ] && rm -rf "$TMPDIR"
           mkdir -p "$TMPDIR"

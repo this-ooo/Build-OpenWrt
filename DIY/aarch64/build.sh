@@ -46,11 +46,7 @@ IMG_NAME=openwrt
 
 mkdir -p "$TMPDIR" && \
 gzip -dc *-rootfs.tar.gz | ( cd "$TMPDIR" && tar xf - ) && \
-(cd "$TMPDIR" && tar cf ../${IMG_NAME}-rootfs-patched.tar .) && \
-docker build -t ${IMG_NAME}:${TAG} . && \
-rm -f  ${IMG_NAME}-rootfs-patched.tar && \
-rm -rf "$TMPDIR" && \
-docker save ${IMG_NAME}:${TAG}  > docker-img-${IMG_NAME}-${TAG}.tar
+(cd "$TMPDIR" && tar cf ../${IMG_NAME}-rootfs-patched.tar .)
 
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Error: Build failed!"

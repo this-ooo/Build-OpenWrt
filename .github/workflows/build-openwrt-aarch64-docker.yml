@@ -12,8 +12,8 @@ on:
           - 25.12
           - 25.12-SNAPSHOT
 
-#permissions:
-#  contents: write
+permissions:
+  contents: write
 
 env:
   REGISTRY: ghcr.io
@@ -39,7 +39,7 @@ jobs:
 
       - name: Copy Firmware to workspace
         run: |
-          cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.tar ${{ github.workspace }}
+          cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.gz ${{ github.workspace }}
           cp "${{ github.workspace }}/DIY/aarch64/Dockerfile ${{ github.workspace }}
           #cd ${{ github.workspace }}/bin/targets/armsr/armv8/
           TMPDIR=openwrt_rootfs

@@ -96,7 +96,7 @@ jobs:
   
       - name: Organize files
         id: organize
-        if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+        #if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -112,12 +112,12 @@ jobs:
   
       - name: Image - build docker image
         run: |
-          cp DIY/aarch64/* ${{ env.FIRMWARE }}
-          cd ${{ env.FIRMWARE }}
+          cp DIY/aarch64/* $GITHUB_ENV
+          cd $GITHUB_ENV
           bash build.sh
   
       - name: Upload - push to artifact file
         uses: actions/upload-artifact@master
         with:
           name: Docker-OpenWrt-aarch64
-          path: ${{ env.FIRMWARE }}/*.tar
+          path: $GITHUB_ENV/*.tar

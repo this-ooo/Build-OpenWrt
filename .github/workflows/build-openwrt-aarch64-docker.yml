@@ -31,7 +31,8 @@ jobs:
       - name: Building armsr-armv8 QEMU ImmortalWrt
         run: |
           luci_version="${{ github.event.inputs.luci_version }}"
-          docker run --rm \
+          docker run --rm -i \
+            --user root \
             -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/DIY/aarch64/uci-defaults/settings-aarch64:/home/build/immortalwrt/files/etc/uci-defaults/settings-aarch64" \
             -v "${{ github.workspace }}/DIY/aarch64/.config:/home/build/immortalwrt/.config" \

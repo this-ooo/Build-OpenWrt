@@ -12,11 +12,6 @@ on:
           - 25.12
           - 25.12-SNAPSHOT
 
-permissions:
-  contents: write
-  packages: write
-  #contents: read
-
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: openwrt
@@ -24,6 +19,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
+
+    permissions:  
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@main
@@ -38,7 +38,7 @@ jobs:
             -v "${{ github.workspace }}/DIY/aarch64/.config:/home/build/immortalwrt/.config" \
             -v "${{ github.workspace }}/DIY/aarch64/build.sh:/home/build/immortalwrt/build.sh" \
             immortalwrt/imagebuilder:armsr-armv8-openwrt-${luci_version} /bin/bash /home/build/immortalwrt/build.sh
-          cd ${{ github.workspace }}/bin/targets/armsr/armv8/
+          cp ${{ github.workspace }}/bin/targets/armsr/armv8/*.tar ${{ github.workspace }}
 
 #      - name: Firmware
 #        run: |
@@ -62,7 +62,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context:
+          context: .
           file: ${{ github.workspace }}/DIY/aarch64/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest

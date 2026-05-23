@@ -104,9 +104,8 @@ jobs:
 
       - name: Image - build docker image
         run: |
-          #cp DIY/aarch64/* $FIRMWARE
+          cp $GITHUB_WORKSPACE/DIY/aarch64/* $FIRMWARE/
           cd $FIRMWARE
-          cp DIY/aarch64/* .
           bash build.sh
   
       - name: Upload - push to artifact file

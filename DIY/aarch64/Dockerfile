@@ -1,5 +1,5 @@
 FROM scratch
-ADD openwrt*-rootfs-patched.tar /
+ADD *-rootfs.tar /
 ENV WAN6ETH='@lan'
 ENV LANIP='192.168.8.1'
 ENV LANGATEWAY='192.168.5.1'

@@ -20,10 +20,10 @@ if echo "$PACKAGES" | grep -q "luci-app-openclash"; then
     wget -q https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat -O files/etc/openclash/GeoSite.dat
     # Download latest openclash Client
     URL=$(curl -s https://api.github.com/repos/vernesong/OpenClash/releases/latest \
-      | grep "browser_download_url.*apk" \
+      | grep "browser_download_url.*ipk" \
       | head -n1 \
       | cut -d '"' -f 4)
-    echo "OpenClash latest apk: $URL"
+    echo "OpenClash latest ipk: $URL"
     wget "$URL" -P /home/build/immortalwrt/packages/
 else
     echo "⚪️ 未选择 luci-app-openclash"

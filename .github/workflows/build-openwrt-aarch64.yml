@@ -19,7 +19,6 @@ env:
   CONFIG_FILE: aarch64.config
   DIY_P1_SH: DIY/diy-part1.sh
   DIY_P2_SH: DIY/diy-part2.sh
-  #UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -102,22 +101,16 @@ jobs:
           rm -rf packages
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
-  
-      #- name: Upload firmware directory
-        #uses: actions/upload-artifact@main
-        #if: steps.organize.outputs.status == 'success' && !cancelled()
-        #with:
-          #name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-          #path: ${{ env.FIRMWARE }}/*.gz
-  
+
       - name: Image - build docker image
         run: |
-          cp DIY/aarch64/* $GITHUB_ENV
-          cd $GITHUB_ENV
+          #cp DIY/aarch64/* $FIRMWARE
+          cd $FIRMWARE
+          cp DIY/aarch64/* .
           bash build.sh
   
       - name: Upload - push to artifact file
         uses: actions/upload-artifact@master
         with:
           name: Docker-OpenWrt-aarch64
-          path: $GITHUB_ENV/*.tar
+          path: $FIRMWARE/*.tar

@@ -33,16 +33,6 @@ echo "$PACKAGES"
 
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files"
 
-cd /home/build/immortalwrt/bin/targets/armsr/armv8/
-
-TMPDIR=openwrt_rootfs
-
-[ -d "$TMPDIR" ] && rm -rf "$TMPDIR"
-
-mkdir -p "$TMPDIR" && \
-gzip -dc *-rootfs.tar.gz | ( cd "$TMPDIR" && tar xf - ) && \
-(cd "$TMPDIR" && tar cf ../openwrt-rootfs-patched.tar .)
-
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Error: Build failed!"
     exit 1

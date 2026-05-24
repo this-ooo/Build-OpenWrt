@@ -5,6 +5,7 @@
 
 # 各位注意 如果你构建的固件是硬路由 此文件的注释要酌情考虑是否打开 因为硬路由的闪存空间有限 若构建出来过大或者构建失败 记得调整本文件的注释
 # 考虑到istore商店的集成与否 属于高频操作 故 目前已将集成store的操作放置在 工作流的UI 选项 用户自行勾选 则集成  不勾选则不集成 以减少修改此文件的次数
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES -autocore -automount -urandom-seed -urngd -kmod-amazon-ena -kmod-atlantic -kmod-bcmgenet -kmod-dwmac-imx -kmod-dwmac-rockchip -kmod-dwmac-sun8i -kmod-e1000e -kmod-fs-vfat -kmod-fsl-dpaa1-net -kmod-fsl-dpaa2-net -kmod-fsl-enetc-net -kmod-fsl-fec -kmod-gpio-pca953x -kmod-i2c-mux-pca954x -kmod-octeontx2-net -kmod-mvneta -kmod-mvpp2 -kmod-nf-nathelper -kmod-nft-offload -kmod-renesas-net-avb -kmod-rtc-rx8025 -kmod-sfp -kmod-wdt-sp805 -mkf2fs -mtd -kmod-phy-aquantia -kmod-phy-broadcom -kmod-phy-marvell -kmod-phy-marvell-10g -kmod-phy-realtek -kmod-phy-smsc -kmod-vmxnet3 -ppp -ppp-mod-pppoe"
 
 # 首页和网络向导
 #CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-i18n-quickstart-zh-cn"

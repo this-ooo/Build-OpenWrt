@@ -111,8 +111,8 @@ jobs:
       - name: Organize files
         id: organize
         run: |
-          #cd openwrt/bin/targets/*/*/
-          cd openwrt/bin/targets/armsr/armv8/
+          cd openwrt/bin/targets/*/*/
+          rm -rf packages
           gzip -d *.gz
           
           docker buildx create --name mybuilder --use

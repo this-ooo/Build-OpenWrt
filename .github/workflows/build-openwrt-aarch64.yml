@@ -65,7 +65,7 @@ jobs:
           chmod +x $DIY_P2_SH
           cd openwrt
           $GITHUB_WORKSPACE/$DIY_P2_SH
-          cp -rf $GITHUB_WORKSPACE/DIY/aarch64/uci-defaults/settings-aarch64 package/base-files/files/etc/uci-defaults/settings
+          cp -rf $GITHUB_WORKSPACE/DIY/aarch64/settings-aarch64 package/base-files/files/etc/uci-defaults/settings
           mkdir -p package/openclash/luci-app-openclash/root/etc/openclash/core
           LATEST_TAG=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)
           echo "Latest mihomo version: $LATEST_TAG"

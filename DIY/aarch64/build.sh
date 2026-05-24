@@ -1,9 +1,47 @@
 #!/bin/bash
+# Log file for debugging
+source shell/custom-packages.sh
+source shell/switch_repository.sh
+echo "第三方软件包: $CUSTOM_PACKAGES"
+LOGFILE="/tmp/uci-defaults-log.txt"
+echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
+
+if [ -z "$CUSTOM_PACKAGES" ]; then
+  echo "⚪️ 未选择 任何第三方软件包"
+else
+  # 下载 run 文件仓库
+  echo "🔄 正在同步第三方软件仓库 Cloning run file repo..."
+  git clone --depth=1 https://github.com/wukongdaily/store.git /tmp/store-run-repo
+
+  # 拷贝 run/arm64 下所有 run 文件和ipk文件 到 extra-packages 目录
+  mkdir -p /home/build/immortalwrt/extra-packages
+  cp -r /tmp/store-run-repo/run/arm64/* /home/build/immortalwrt/extra-packages/
+
+  echo "✅ Run files copied to extra-packages:"
+  ls -lh /home/build/immortalwrt/extra-packages/*.run
+  # 解压并拷贝ipk到packages目录
+  sh shell/prepare-packages.sh
+  ls -lah /home/build/immortalwrt/packages/
+  # 添加架构优先级信息
+  sed -i '1i\
+  arch aarch64_generic 10\n\
+  arch aarch64_cortex-a53 15' repositories.conf
+fi
 
 # 输出调试信息
-echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建固件..."
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建QEMU-arm64固件..."
+
+
+# 定义所需安装的包列表 下列插件你都可以自行删减
+PACKAGES=""
+PACKAGES="$PACKAGES curl"
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-firewall-zh-cn"
+PACKAGES="$PACKAGES openssh-sftp-server"
+# ======== shell/custom-packages.sh =======
+# 合并imm仓库以外的第三方插件
+PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
+
 # luci-app-openclash
 PACKAGES="$PACKAGES luci-app-openclash -autocore -automount -urandom-seed -urngd -kmod-amazon-ena -kmod-atlantic -kmod-bcmgenet -kmod-dwmac-imx -kmod-dwmac-rockchip -kmod-dwmac-sun8i -kmod-e1000e -kmod-fs-vfat -kmod-fsl-dpaa1-net -kmod-fsl-dpaa2-net -kmod-fsl-enetc-net -kmod-fsl-fec -kmod-gpio-pca953x -kmod-i2c-mux-pca954x -kmod-octeontx2-net -kmod-mvneta -kmod-mvpp2 -kmod-nf-nathelper -kmod-nft-offload -kmod-renesas-net-avb -kmod-rtc-rx8025 -kmod-sfp -kmod-wdt-sp805 -mkf2fs -mtd -kmod-phy-aquantia -kmod-phy-broadcom -kmod-phy-marvell -kmod-phy-marvell-10g -kmod-phy-realtek -kmod-phy-smsc -kmod-vmxnet3 -ppp -ppp-mod-pppoe"
 

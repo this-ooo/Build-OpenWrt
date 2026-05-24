@@ -1,7 +1,7 @@
 #!/bin/bash
 # Log file for debugging
-source DIY/aarch64/shell/custom-packages.sh
-source DIY/aarch64/shell/switch_repository.sh
+source shell/custom-packages.sh
+source shell/switch_repository.sh
 
 if [ -z "$CUSTOM_PACKAGES" ]; then
   echo "⚪️ 未选择 任何第三方软件包"
@@ -17,7 +17,7 @@ else
   echo "✅ Run files copied to extra-packages:"
   ls -lh /home/build/immortalwrt/extra-packages/*.run
   # 解压并拷贝ipk到packages目录
-  sh DIY/aarch64/shell/prepare-packages.sh
+  sh shell/prepare-packages.sh
   ls -lah /home/build/immortalwrt/packages/
   # 添加架构优先级信息
   sed -i '1i\

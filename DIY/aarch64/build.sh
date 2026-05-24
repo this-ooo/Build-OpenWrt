@@ -1,10 +1,7 @@
 #!/bin/bash
 # Log file for debugging
-source shell/custom-packages.sh
-source shell/switch_repository.sh
-echo "第三方软件包: $CUSTOM_PACKAGES"
-LOGFILE="/tmp/uci-defaults-log.txt"
-echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
+source DIY/aarch64/shell/custom-packages.sh
+source DIY/aarch64/shell/switch_repository.sh
 
 if [ -z "$CUSTOM_PACKAGES" ]; then
   echo "⚪️ 未选择 任何第三方软件包"
@@ -20,7 +17,7 @@ else
   echo "✅ Run files copied to extra-packages:"
   ls -lh /home/build/immortalwrt/extra-packages/*.run
   # 解压并拷贝ipk到packages目录
-  sh shell/prepare-packages.sh
+  sh DIY/aarch64/shell/prepare-packages.sh
   ls -lah /home/build/immortalwrt/packages/
   # 添加架构优先级信息
   sed -i '1i\
@@ -42,8 +39,8 @@ PACKAGES="$PACKAGES openssh-sftp-server"
 # 合并imm仓库以外的第三方插件
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
 
-# luci-app-openclash
-PACKAGES="$PACKAGES luci-app-openclash -autocore -automount -urandom-seed -urngd -kmod-amazon-ena -kmod-atlantic -kmod-bcmgenet -kmod-dwmac-imx -kmod-dwmac-rockchip -kmod-dwmac-sun8i -kmod-e1000e -kmod-fs-vfat -kmod-fsl-dpaa1-net -kmod-fsl-dpaa2-net -kmod-fsl-enetc-net -kmod-fsl-fec -kmod-gpio-pca953x -kmod-i2c-mux-pca954x -kmod-octeontx2-net -kmod-mvneta -kmod-mvpp2 -kmod-nf-nathelper -kmod-nft-offload -kmod-renesas-net-avb -kmod-rtc-rx8025 -kmod-sfp -kmod-wdt-sp805 -mkf2fs -mtd -kmod-phy-aquantia -kmod-phy-broadcom -kmod-phy-marvell -kmod-phy-marvell-10g -kmod-phy-realtek -kmod-phy-smsc -kmod-vmxnet3 -ppp -ppp-mod-pppoe"
+#
+PACKAGES="$PACKAGES -autocore -automount -urandom-seed -urngd -kmod-amazon-ena -kmod-atlantic -kmod-bcmgenet -kmod-dwmac-imx -kmod-dwmac-rockchip -kmod-dwmac-sun8i -kmod-e1000e -kmod-fs-vfat -kmod-fsl-dpaa1-net -kmod-fsl-dpaa2-net -kmod-fsl-enetc-net -kmod-fsl-fec -kmod-gpio-pca953x -kmod-i2c-mux-pca954x -kmod-octeontx2-net -kmod-mvneta -kmod-mvpp2 -kmod-nf-nathelper -kmod-nft-offload -kmod-renesas-net-avb -kmod-rtc-rx8025 -kmod-sfp -kmod-wdt-sp805 -mkf2fs -mtd -kmod-phy-aquantia -kmod-phy-broadcom -kmod-phy-marvell -kmod-phy-marvell-10g -kmod-phy-realtek -kmod-phy-smsc -kmod-vmxnet3 -ppp -ppp-mod-pppoe"
 
 # 若构建openclash 则添加内核
 if echo "$PACKAGES" | grep -q "luci-app-openclash"; then

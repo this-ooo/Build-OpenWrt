@@ -111,8 +111,8 @@ jobs:
       - name: Organize files
         id: organize
         run: |
-          cd openwrt/bin/targets/*/*
-          gzip -d *.tar.gz
+          cd openwrt/bin/targets/*/*/
+          gzip -d *.gz
           
           docker buildx create --name mybuilder --use
           docker buildx inspect --bootstrap

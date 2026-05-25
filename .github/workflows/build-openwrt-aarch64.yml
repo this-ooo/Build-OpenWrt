@@ -118,21 +118,22 @@ jobs:
       - name: Organize files
         id: organize
         run: |
-          cd openwrt/bin/targets/*/*/
+          cd openwrt/bin/targets/*/*
           rm -rf packages
-          gzip -d *.gz
+          #gzip -d *.gz
           
-          docker buildx create --name mybuilder --use
-          docker buildx inspect --bootstrap
-          docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t openwrt --output=type=docker .
-          docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push
-          rm -f *.tar
-          docker save openwrt  > docker-img-openwrt.tar
+          #docker buildx create --name mybuilder --use
+          #docker buildx inspect --bootstrap
+          #docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t openwrt --output=type=docker .
+          #docker buildx build -f $GITHUB_WORKSPACE/DIY/aarch64/Dockerfile --platform linux/arm64 -t ghcr.io/this-ooo/openwrt:latest . --push
+          #rm -f *.tar
+          #docker save openwrt  > docker-img-openwrt.tar
 
           echo "firmware=$PWD" >> $GITHUB_OUTPUT
+          echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Upload - push to artifact file
         uses: actions/upload-artifact@main
         with:
           name: Docker-OpenWrt-aarch64
-          path: ${{ steps.organize.outputs.firmware }}/*.tar
+          path: ${{ steps.organize.outputs.firmware }}/*

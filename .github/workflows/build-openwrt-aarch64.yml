@@ -94,7 +94,14 @@ jobs:
       - name: Check space usage
         if: (!cancelled())
         run: df -hT
-      
+
+      - name: Upload bin directory
+        uses: actions/upload-artifact@main
+        #if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        with:
+          name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          path: openwrt/bin
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
       

@@ -103,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.compile.outputs.status == 'success'
         with:
-          name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: OpenWrt_bin$DEVICE_NAME$FILE_DATE
           path: openwrt/bin
 
       - name: Set up QEMU
@@ -133,14 +133,14 @@ jobs:
           #rm -f *.tar
           #docker save openwrt  > docker-img-openwrt.tar
 
-          echo "firmware=$PWD" >> $GITHUB_ENV
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Upload - push to artifact file
         uses: actions/upload-artifact@main
         with:
           name: Docker-OpenWrt-aarch64
-          path: ${{ steps.organize.outputs.firmware }}/*
+          path: $FIRMWARE
   
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main

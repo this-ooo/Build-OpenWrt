@@ -71,6 +71,8 @@ jobs:
           $GITHUB_WORKSPACE/$DIY_P2_SH
           cp -rf $GITHUB_WORKSPACE/DIY/aarch64/settings-aarch64 package/base-files/files/etc/uci-defaults/settings
           mkdir -p package/openclash/luci-app-openclash/root/etc/openclash/core
+          wget -q https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat -O package/openclash/luci-app-openclash/root/etc/openclash/GeoIP.dat
+          wget -q https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat -O package/openclash/luci-app-openclash/root/etc/openclash/GeoSite.dat
           LATEST_TAG=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)
           echo "Latest mihomo version: $LATEST_TAG"
           curl -L "https://github.com/MetaCubeX/mihomo/releases/download/${LATEST_TAG}/mihomo-linux-arm64-${LATEST_TAG}.gz" | gzip -d > package/openclash/luci-app-openclash/root/etc/openclash/core/clash_meta
